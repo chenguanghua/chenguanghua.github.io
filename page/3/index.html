@@ -424,6 +424,119 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://chenguanghua.github.io/2022/08/15/es/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="热心的蚂蚁">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="热心的蚂蚁的博客">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="undefined | 热心的蚂蚁的博客">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2022/08/15/es/" class="post-title-link" itemprop="url">es</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2022-08-15 08:14:16" itemprop="dateCreated datePublished" datetime="2022-08-15T08:14:16+08:00">2022-08-15</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2023-02-23 17:28:42" itemprop="dateModified" datetime="2023-02-23T17:28:42+08:00">2023-02-23</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/java/" itemprop="url" rel="index"><span itemprop="name">java</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h2 id="1-十亿级数据ES搜索怎么优化"><a href="#1-十亿级数据ES搜索怎么优化" class="headerlink" title="1. 十亿级数据ES搜索怎么优化?"></a>1. 十亿级数据ES搜索怎么优化?</h2><blockquote>
+<p>es 的搜索引擎严重依赖于底层的 <code>filesystem cache</code>，你如果给 <code>filesystem cache</code> 更多的内存，尽量让内存可以容纳所有的 <code>idx segment file</code> 索引数据文件，那么你搜索的时候就基本都是走内存的，性能会非常高</p>
+</blockquote>
+<ul>
+<li>存尽量少字段  ，可以采用<code>es</code>+<code>hbase</code></li>
+<li>数据预热，程序定时刷新数据到 <code>filesystem cache</code></li>
+<li>冷热分离 ， 冷热数据单独建立索引，避免冷数据刷掉热数据的<code>filesystem cache</code></li>
+<li>直接写入计算好数据，避免join操作</li>
+<li>分页性能优化</li>
+</ul>
+<p>​    es 的分页是较坑的，为啥呢？举个例子吧，假如你每页是 10 条数据，你现在要查询第 100 页，实际上是会把每个 shard 上存储的前 1000 条数据都查到一个协调节点上，如果你有个 5 个 shard，那么就有 5000 条数据，接着协调节点对这 5000 条数据进行一些合并、处理，再获取到最终第 100 页的 10 条数据。</p>
+<h2 id="2-在数据量很大的情况下，怎么实现深度分页？"><a href="#2-在数据量很大的情况下，怎么实现深度分页？" class="headerlink" title="2. 在数据量很大的情况下，怎么实现深度分页？"></a>2. 在数据量很大的情况下，怎么实现深度分页？</h2><h2 id="3-es-读写数据过程-和检索过程"><a href="#3-es-读写数据过程-和检索过程" class="headerlink" title="3. es 读写数据过程 和检索过程"></a>3. es 读写数据过程 和检索过程</h2><h3 id="1-写"><a href="#1-写" class="headerlink" title="1. 写"></a>1. 写</h3><ul>
+<li>客户端选择一个 node 发送请求过去，这个 node 就是 <code>coordinating node</code>（协调节点）。</li>
+<li><code>coordinating node</code> 对 document 进行路由，将请求转发给对应的 node（有 primary shard）。</li>
+<li>实际的 node 上的 <code>primary shard</code> 处理请求，然后将数据同步到 <code>replica node</code>。</li>
+<li><code>coordinating node</code> 如果发现 <code>primary node</code> 和所有 <code>replica node</code> 都搞定之后，就返回响应结果给客户端。</li>
+</ul>
+<h3 id="2-读"><a href="#2-读" class="headerlink" title="2. 读"></a>2. 读</h3><p>可以通过 <code>doc id</code> 来查询，会根据 <code>doc id</code> 进行 hash，判断出来当时把 <code>doc id</code> 分配到了哪个 shard 上面去，从那个 shard 去查询。</p>
+<ul>
+<li>客户端发送请求到任意一个 node，成为 <code>coordinate node</code>。</li>
+<li><code>coordinate node</code> 对 <code>doc id</code> 进行哈希路由，将请求转发到对应的 node，此时会使用 <code>round-robin</code>随机轮询算法，在 <code>primary shard</code> 以及其所有 replica 中随机选择一个，让读请求负载均衡。</li>
+<li>接收请求的 node 返回 document 给 <code>coordinate node</code>。</li>
+<li><code>coordinate node</code> 返回 document 给客户端。</li>
+</ul>
+<h3 id="3-检索"><a href="#3-检索" class="headerlink" title="3.检索"></a>3.检索</h3><p>客户端发送请求到一个 <code>coordinate node</code>。</p>
+<p>协调节点将搜索请求转发到所有的 shard 对应的 <code>primary shard</code> 或 <code>replica shard</code>，都可以。</p>
+<p>query phase：每个 shard 将自己的搜索结果（其实就是一些 <code>doc id</code>）返回给协调节点，由协调节点进行数据的合并、排序、分页等操作，产出最终结果。</p>
+<p>fetch phase：接着由协调节点根据 <code>doc id</code> 去各个节点上拉取实际的 <code>document</code> 数据，最终返回给客户端。</p>
+<p>​     </p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
     <link itemprop="mainEntityOfPage" href="https://chenguanghua.github.io/2022/08/15/Java%E7%89%88gRPC/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -541,7 +654,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://chenguanghua.github.io/2022/08/15/es/">
+    <link itemprop="mainEntityOfPage" href="https://chenguanghua.github.io/2022/08/15/feign/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -559,7 +672,7 @@
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/2022/08/15/es/" class="post-title-link" itemprop="url">es</a>
+          <a href="/2022/08/15/feign/" class="post-title-link" itemprop="url">feign使用</a>
         </h2>
 
         <div class="post-meta-container">
@@ -577,7 +690,7 @@
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2023-02-23 17:28:42" itemprop="dateModified" datetime="2023-02-23T17:28:42+08:00">2023-02-23</time>
+      <time title="修改时间：2023-02-23 17:29:43" itemprop="dateModified" datetime="2023-02-23T17:29:43+08:00">2023-02-23</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -599,136 +712,38 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <h2 id="1-十亿级数据ES搜索怎么优化"><a href="#1-十亿级数据ES搜索怎么优化" class="headerlink" title="1. 十亿级数据ES搜索怎么优化?"></a>1. 十亿级数据ES搜索怎么优化?</h2><blockquote>
-<p>es 的搜索引擎严重依赖于底层的 <code>filesystem cache</code>，你如果给 <code>filesystem cache</code> 更多的内存，尽量让内存可以容纳所有的 <code>idx segment file</code> 索引数据文件，那么你搜索的时候就基本都是走内存的，性能会非常高</p>
-</blockquote>
-<ul>
-<li>存尽量少字段  ，可以采用<code>es</code>+<code>hbase</code></li>
-<li>数据预热，程序定时刷新数据到 <code>filesystem cache</code></li>
-<li>冷热分离 ， 冷热数据单独建立索引，避免冷数据刷掉热数据的<code>filesystem cache</code></li>
-<li>直接写入计算好数据，避免join操作</li>
-<li>分页性能优化</li>
-</ul>
-<p>​    es 的分页是较坑的，为啥呢？举个例子吧，假如你每页是 10 条数据，你现在要查询第 100 页，实际上是会把每个 shard 上存储的前 1000 条数据都查到一个协调节点上，如果你有个 5 个 shard，那么就有 5000 条数据，接着协调节点对这 5000 条数据进行一些合并、处理，再获取到最终第 100 页的 10 条数据。</p>
-<h2 id="2-在数据量很大的情况下，怎么实现深度分页？"><a href="#2-在数据量很大的情况下，怎么实现深度分页？" class="headerlink" title="2. 在数据量很大的情况下，怎么实现深度分页？"></a>2. 在数据量很大的情况下，怎么实现深度分页？</h2><h2 id="3-es-读写数据过程-和检索过程"><a href="#3-es-读写数据过程-和检索过程" class="headerlink" title="3. es 读写数据过程 和检索过程"></a>3. es 读写数据过程 和检索过程</h2><h3 id="1-写"><a href="#1-写" class="headerlink" title="1. 写"></a>1. 写</h3><ul>
-<li>客户端选择一个 node 发送请求过去，这个 node 就是 <code>coordinating node</code>（协调节点）。</li>
-<li><code>coordinating node</code> 对 document 进行路由，将请求转发给对应的 node（有 primary shard）。</li>
-<li>实际的 node 上的 <code>primary shard</code> 处理请求，然后将数据同步到 <code>replica node</code>。</li>
-<li><code>coordinating node</code> 如果发现 <code>primary node</code> 和所有 <code>replica node</code> 都搞定之后，就返回响应结果给客户端。</li>
-</ul>
-<h3 id="2-读"><a href="#2-读" class="headerlink" title="2. 读"></a>2. 读</h3><p>可以通过 <code>doc id</code> 来查询，会根据 <code>doc id</code> 进行 hash，判断出来当时把 <code>doc id</code> 分配到了哪个 shard 上面去，从那个 shard 去查询。</p>
-<ul>
-<li>客户端发送请求到任意一个 node，成为 <code>coordinate node</code>。</li>
-<li><code>coordinate node</code> 对 <code>doc id</code> 进行哈希路由，将请求转发到对应的 node，此时会使用 <code>round-robin</code>随机轮询算法，在 <code>primary shard</code> 以及其所有 replica 中随机选择一个，让读请求负载均衡。</li>
-<li>接收请求的 node 返回 document 给 <code>coordinate node</code>。</li>
-<li><code>coordinate node</code> 返回 document 给客户端。</li>
-</ul>
-<h3 id="3-检索"><a href="#3-检索" class="headerlink" title="3.检索"></a>3.检索</h3><p>客户端发送请求到一个 <code>coordinate node</code>。</p>
-<p>协调节点将搜索请求转发到所有的 shard 对应的 <code>primary shard</code> 或 <code>replica shard</code>，都可以。</p>
-<p>query phase：每个 shard 将自己的搜索结果（其实就是一些 <code>doc id</code>）返回给协调节点，由协调节点进行数据的合并、排序、分页等操作，产出最终结果。</p>
-<p>fetch phase：接着由协调节点根据 <code>doc id</code> 去各个节点上拉取实际的 <code>document</code> 数据，最终返回给客户端。</p>
-<p>​     </p>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://chenguanghua.github.io/2022/08/15/fastjson/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="热心的蚂蚁">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="热心的蚂蚁的博客">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="undefined | 热心的蚂蚁的博客">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2022/08/15/fastjson/" class="post-title-link" itemprop="url">JSON使用</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-
-      <time title="创建时间：2022-08-15 08:14:16" itemprop="dateCreated datePublished" datetime="2022-08-15T08:14:16+08:00">2022-08-15</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2023-02-23 17:29:33" itemprop="dateModified" datetime="2023-02-23T17:29:33+08:00">2023-02-23</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/java/" itemprop="url" rel="index"><span itemprop="name">java</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <ol>
-<li>泛型反序列化</li>
+          <h2 id="1-feign-日志"><a href="#1-feign-日志" class="headerlink" title="1. feign 日志"></a>1. feign 日志</h2><h3 id="1-配置方式"><a href="#1-配置方式" class="headerlink" title="1. 配置方式"></a>1. 配置方式</h3><ol>
+<li>基于配置文件修改feign的日志级别可以针对单个服务</li>
 </ol>
-<p>​        <code>new TypeReference&lt;List&lt;User&gt;&gt;()</code></p>
+  <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">feign:  </span><br><span class="line">  client:</span><br><span class="line">    config: </span><br><span class="line">      userservice: # 针对某个微服务的配置</span><br><span class="line">        loggerLevel: FULL #  日志级别 </span><br></pre></td></tr></table></figure>
+
 <ol start="2">
-<li><p>如果数据对象中存在Map对象，为了保证序列化后的字段顺序一致，需要添加<code>SerializerFeature.MapSortField</code>特征。</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">JSON.toJSONString(userMap, SerializerFeature.MapSortField);</span><br></pre></td></tr></table></figure>
-</li>
-<li><p><strong>排除所有类的属性字段：</strong></p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">List&lt;UserVO&gt; userList = ...;SimplePropertyPreFilter filter = new SimplePropertyPreFilter();filter.getExcludes().addAll(Arrays.asList(&quot;gmtCreate&quot;, &quot;gmtModified&quot;));Assert.assertEquals(&quot;用户信息不一致&quot;, text, JSON.toJSONString(user, filter));</span><br></pre></td></tr></table></figure>
-
-<p><strong>排除单个类的属性字段：</strong></p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">List&lt;UserVO&gt; userList = ...;SimplePropertyPreFilter filter = new SimplePropertyPreFilter(UserVO.class);filter.getExcludes().addAll(Arrays.asList(&quot;gmtCreate&quot;, &quot;gmtModified&quot;));Assert.assertEquals(&quot;用户信息不一致&quot;, text, JSON.toJSONString(user, filter));</span><br></pre></td></tr></table></figure>
-
-<p><strong>排查多个类属性：</strong></p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">Pair&lt;UserVO, CompanyVO&gt; userCompanyPair = ...;</span><br><span class="line"><span class="type">SimplePropertyPreFilter</span> <span class="variable">userFilter</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">SimplePropertyPreFilter</span>(UserVO.class);</span><br><span class="line">userFilter.getExcludes().addAll(Arrays.asList(<span class="string">&quot;gmtCreate&quot;</span>, <span class="string">&quot;gmtModified&quot;</span>));</span><br><span class="line"><span class="type">SimplePropertyPreFilter</span> <span class="variable">companyFilter</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">SimplePropertyPreFilter</span>(CompanyVO.class);</span><br><span class="line">companyFilter.getExcludes().addAll(Arrays.asList(<span class="string">&quot;createTime&quot;</span>, <span class="string">&quot;modifyTime&quot;</span>));</span><br><span class="line">Assert.assertEquals(<span class="string">&quot;用户公司对不一致&quot;</span>, text, JSON.toJSONString(userCompanyPair, <span class="keyword">new</span> <span class="title class_">SerializeFilter</span>[]&#123;userFilter, companyFilter&#125;);</span><br></pre></td></tr></table></figure></li>
+<li>针对所有服务</li>
 </ol>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">feign:  </span><br><span class="line">  client:</span><br><span class="line">    config: </span><br><span class="line">      default: # 这里用default就是全局配置，如果是写服务名称，则是针对某个微服务的配置</span><br><span class="line">        loggerLevel: FULL #  日志级别 </span><br></pre></td></tr></table></figure>
+
+<h3 id="2-java-代码方式"><a href="#2-java-代码方式" class="headerlink" title="2. java 代码方式"></a>2. <code>java</code> 代码方式</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">public class DefaultFeignConfiguration  &#123;</span><br><span class="line">    @Bean</span><br><span class="line">    public Logger.Level feignLogLevel()&#123;</span><br><span class="line">        return Logger.Level.BASIC; // 日志级别为BASIC</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ol>
+<li>全局</li>
+</ol>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">@EnableFeignClients(defaultConfiguration = DefaultFeignConfiguration.class)</span><br></pre></td></tr></table></figure>
+
+<ol start="2">
+<li>局部</li>
+</ol>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">@FeignClient(value = &quot;userservice&quot;, configuration = DefaultFeignConfiguration .class)</span><br></pre></td></tr></table></figure>
+
+<h2 id="3-支持httpClient"><a href="#3-支持httpClient" class="headerlink" title="3. 支持httpClient"></a>3. 支持<code>httpClient</code></h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&lt;!--httpClient的依赖 --&gt;</span><br><span class="line">&lt;dependency&gt;</span><br><span class="line">    &lt;groupId&gt;io.github.openfeign&lt;/groupId&gt;</span><br><span class="line">    &lt;artifactId&gt;feign-httpclient&lt;/artifactId&gt;</span><br><span class="line">&lt;/dependency&gt;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">feign:</span><br><span class="line">  client:</span><br><span class="line">    config:</span><br><span class="line">      default: # default全局的配置</span><br><span class="line">        loggerLevel: BASIC # 日志级别，BASIC就是基本的请求和响应信息</span><br><span class="line">  httpclient:</span><br><span class="line">    enabled: true # 开启feign对HttpClient的支持</span><br><span class="line">    max-connections: 200 # 最大的连接数</span><br><span class="line">    max-connections-per-route: 50 # 每个路径的最大连接数</span><br></pre></td></tr></table></figure>
+
+<h2 id="4-FeignClient整合Sentinel"><a href="#4-FeignClient整合Sentinel" class="headerlink" title="4. FeignClient整合Sentinel"></a>4. <code>FeignClient</code>整合Sentinel</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">feign:</span><br><span class="line">  sentinel:</span><br><span class="line">    enabled: true # 开启feign对sentinel的支持</span><br></pre></td></tr></table></figure>
+
+<h2 id="5-feign-降级"><a href="#5-feign-降级" class="headerlink" title="5. feign 降级"></a>5. feign 降级</h2><ul>
+<li><code>FallbackClass</code>无法对远程调用的异常做处理</li>
+<li><code>FallbackFactory</code>，可以对远程调用的异常做处理</li>
+</ul>
 
       
     </div>
@@ -862,7 +877,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://chenguanghua.github.io/2022/08/15/feign/">
+    <link itemprop="mainEntityOfPage" href="https://chenguanghua.github.io/2022/08/15/fastjson/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -880,7 +895,7 @@
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/2022/08/15/feign/" class="post-title-link" itemprop="url">feign使用</a>
+          <a href="/2022/08/15/fastjson/" class="post-title-link" itemprop="url">JSON使用</a>
         </h2>
 
         <div class="post-meta-container">
@@ -898,7 +913,7 @@
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2023-02-23 17:29:43" itemprop="dateModified" datetime="2023-02-23T17:29:43+08:00">2023-02-23</time>
+      <time title="修改时间：2023-02-23 17:29:33" itemprop="dateModified" datetime="2023-02-23T17:29:33+08:00">2023-02-23</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -920,38 +935,23 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <h2 id="1-feign-日志"><a href="#1-feign-日志" class="headerlink" title="1. feign 日志"></a>1. feign 日志</h2><h3 id="1-配置方式"><a href="#1-配置方式" class="headerlink" title="1. 配置方式"></a>1. 配置方式</h3><ol>
-<li>基于配置文件修改feign的日志级别可以针对单个服务</li>
+          <ol>
+<li>泛型反序列化</li>
 </ol>
-  <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">feign:  </span><br><span class="line">  client:</span><br><span class="line">    config: </span><br><span class="line">      userservice: # 针对某个微服务的配置</span><br><span class="line">        loggerLevel: FULL #  日志级别 </span><br></pre></td></tr></table></figure>
-
+<p>​        <code>new TypeReference&lt;List&lt;User&gt;&gt;()</code></p>
 <ol start="2">
-<li>针对所有服务</li>
+<li><p>如果数据对象中存在Map对象，为了保证序列化后的字段顺序一致，需要添加<code>SerializerFeature.MapSortField</code>特征。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">JSON.toJSONString(userMap, SerializerFeature.MapSortField);</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong>排除所有类的属性字段：</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">List&lt;UserVO&gt; userList = ...;SimplePropertyPreFilter filter = new SimplePropertyPreFilter();filter.getExcludes().addAll(Arrays.asList(&quot;gmtCreate&quot;, &quot;gmtModified&quot;));Assert.assertEquals(&quot;用户信息不一致&quot;, text, JSON.toJSONString(user, filter));</span><br></pre></td></tr></table></figure>
+
+<p><strong>排除单个类的属性字段：</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">List&lt;UserVO&gt; userList = ...;SimplePropertyPreFilter filter = new SimplePropertyPreFilter(UserVO.class);filter.getExcludes().addAll(Arrays.asList(&quot;gmtCreate&quot;, &quot;gmtModified&quot;));Assert.assertEquals(&quot;用户信息不一致&quot;, text, JSON.toJSONString(user, filter));</span><br></pre></td></tr></table></figure>
+
+<p><strong>排查多个类属性：</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">Pair&lt;UserVO, CompanyVO&gt; userCompanyPair = ...;</span><br><span class="line"><span class="type">SimplePropertyPreFilter</span> <span class="variable">userFilter</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">SimplePropertyPreFilter</span>(UserVO.class);</span><br><span class="line">userFilter.getExcludes().addAll(Arrays.asList(<span class="string">&quot;gmtCreate&quot;</span>, <span class="string">&quot;gmtModified&quot;</span>));</span><br><span class="line"><span class="type">SimplePropertyPreFilter</span> <span class="variable">companyFilter</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">SimplePropertyPreFilter</span>(CompanyVO.class);</span><br><span class="line">companyFilter.getExcludes().addAll(Arrays.asList(<span class="string">&quot;createTime&quot;</span>, <span class="string">&quot;modifyTime&quot;</span>));</span><br><span class="line">Assert.assertEquals(<span class="string">&quot;用户公司对不一致&quot;</span>, text, JSON.toJSONString(userCompanyPair, <span class="keyword">new</span> <span class="title class_">SerializeFilter</span>[]&#123;userFilter, companyFilter&#125;);</span><br></pre></td></tr></table></figure></li>
 </ol>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">feign:  </span><br><span class="line">  client:</span><br><span class="line">    config: </span><br><span class="line">      default: # 这里用default就是全局配置，如果是写服务名称，则是针对某个微服务的配置</span><br><span class="line">        loggerLevel: FULL #  日志级别 </span><br></pre></td></tr></table></figure>
-
-<h3 id="2-java-代码方式"><a href="#2-java-代码方式" class="headerlink" title="2. java 代码方式"></a>2. <code>java</code> 代码方式</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">public class DefaultFeignConfiguration  &#123;</span><br><span class="line">    @Bean</span><br><span class="line">    public Logger.Level feignLogLevel()&#123;</span><br><span class="line">        return Logger.Level.BASIC; // 日志级别为BASIC</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<ol>
-<li>全局</li>
-</ol>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">@EnableFeignClients(defaultConfiguration = DefaultFeignConfiguration.class)</span><br></pre></td></tr></table></figure>
-
-<ol start="2">
-<li>局部</li>
-</ol>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">@FeignClient(value = &quot;userservice&quot;, configuration = DefaultFeignConfiguration .class)</span><br></pre></td></tr></table></figure>
-
-<h2 id="3-支持httpClient"><a href="#3-支持httpClient" class="headerlink" title="3. 支持httpClient"></a>3. 支持<code>httpClient</code></h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&lt;!--httpClient的依赖 --&gt;</span><br><span class="line">&lt;dependency&gt;</span><br><span class="line">    &lt;groupId&gt;io.github.openfeign&lt;/groupId&gt;</span><br><span class="line">    &lt;artifactId&gt;feign-httpclient&lt;/artifactId&gt;</span><br><span class="line">&lt;/dependency&gt;</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">feign:</span><br><span class="line">  client:</span><br><span class="line">    config:</span><br><span class="line">      default: # default全局的配置</span><br><span class="line">        loggerLevel: BASIC # 日志级别，BASIC就是基本的请求和响应信息</span><br><span class="line">  httpclient:</span><br><span class="line">    enabled: true # 开启feign对HttpClient的支持</span><br><span class="line">    max-connections: 200 # 最大的连接数</span><br><span class="line">    max-connections-per-route: 50 # 每个路径的最大连接数</span><br></pre></td></tr></table></figure>
-
-<h2 id="4-FeignClient整合Sentinel"><a href="#4-FeignClient整合Sentinel" class="headerlink" title="4. FeignClient整合Sentinel"></a>4. <code>FeignClient</code>整合Sentinel</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">feign:</span><br><span class="line">  sentinel:</span><br><span class="line">    enabled: true # 开启feign对sentinel的支持</span><br></pre></td></tr></table></figure>
-
-<h2 id="5-feign-降级"><a href="#5-feign-降级" class="headerlink" title="5. feign 降级"></a>5. feign 降级</h2><ul>
-<li><code>FallbackClass</code>无法对远程调用的异常做处理</li>
-<li><code>FallbackFactory</code>，可以对远程调用的异常做处理</li>
-</ul>
 
       
     </div>

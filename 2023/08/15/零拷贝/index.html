@@ -26,17 +26,17 @@
 <meta property="og:site_name" content="热心的蚂蚁的博客">
 <meta property="og:description" content="1. 传统IO  1.什么是零拷贝 零拷贝是指计算机在执行IO操作的时候, CPU不需要将数据从一个存储区复制到另一个存储区, 进而减少上下文切换以及 CPU 拷贝的时间, 这是一种IO操作优化技术 零拷贝不是没有拷贝数据, 而是减少用户态, 内核态的切换次数 和 CPU拷贝次数  2. 实现方式2.1.mmap + write  虚拟内存把内核空间和用户空间的虚拟地址映射到同一个物理地址, 从而">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://chenguanghua.github.io/2023/08/15/%E9%9B%B6%E6%8B%B7%E8%B4%9D//images/%E5%9B%BE%E7%89%87/Typora/image-20221216102206916.png">
-<meta property="og:image" content="https://chenguanghua.github.io/2023/08/15/%E9%9B%B6%E6%8B%B7%E8%B4%9D//images/%E5%9B%BE%E7%89%87/Typora/image-20221216094826291.png">
-<meta property="og:image" content="https://chenguanghua.github.io/2023/08/15/%E9%9B%B6%E6%8B%B7%E8%B4%9D//images/%E5%9B%BE%E7%89%87/Typora/image-20221216095340338.png">
-<meta property="og:image" content="https://chenguanghua.github.io/2023/08/15/%E9%9B%B6%E6%8B%B7%E8%B4%9D//images/%E5%9B%BE%E7%89%87/Typora/image-20221216100335792.png">
-<meta property="og:image" content="https://chenguanghua.github.io/%5Cimages%5C%E5%9B%BE%E7%89%87%5CTypora%5Cimage-20221216101217488.png">
+<meta property="og:image" content="https://chenguanghua.github.io/2023/08/15/%E9%9B%B6%E6%8B%B7%E8%B4%9D//images/%E5%9B%BE%E7%89%87/typora/image-20221216102206916.png">
+<meta property="og:image" content="https://chenguanghua.github.io/2023/08/15/%E9%9B%B6%E6%8B%B7%E8%B4%9D//images/%E5%9B%BE%E7%89%87/typora/image-20221216094826291.png">
+<meta property="og:image" content="https://chenguanghua.github.io/2023/08/15/%E9%9B%B6%E6%8B%B7%E8%B4%9D//images/%E5%9B%BE%E7%89%87/typora/image-20221216095340338.png">
+<meta property="og:image" content="https://chenguanghua.github.io/2023/08/15/%E9%9B%B6%E6%8B%B7%E8%B4%9D//images/%E5%9B%BE%E7%89%87/typora/image-20221216100335792.png">
+<meta property="og:image" content="https://chenguanghua.github.io/%5Cimages%5C%E5%9B%BE%E7%89%87%5Ctypora%5Cimage-20221216101217488.png">
 <meta property="article:published_time" content="2023-08-15T00:14:16.000Z">
-<meta property="article:modified_time" content="2023-02-23T09:25:57.854Z">
+<meta property="article:modified_time" content="2023-02-23T09:55:46.131Z">
 <meta property="article:author" content="热心的蚂蚁">
 <meta property="article:tag" content="IO">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://chenguanghua.github.io/2023/08/15/%E9%9B%B6%E6%8B%B7%E8%B4%9D//images/%E5%9B%BE%E7%89%87/Typora/image-20221216102206916.png">
+<meta name="twitter:image" content="https://chenguanghua.github.io/2023/08/15/%E9%9B%B6%E6%8B%B7%E8%B4%9D//images/%E5%9B%BE%E7%89%87/typora/image-20221216102206916.png">
 
 
 <link rel="canonical" href="https://chenguanghua.github.io/2023/08/15/%E9%9B%B6%E6%8B%B7%E8%B4%9D/">
@@ -204,7 +204,7 @@
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2023-02-23 17:25:57" itemprop="dateModified" datetime="2023-02-23T17:25:57+08:00">2023-02-23</time>
+      <time title="修改时间：2023-02-23 17:55:46" itemprop="dateModified" datetime="2023-02-23T17:55:46+08:00">2023-02-23</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -226,7 +226,7 @@
     
     
     <div class="post-body" itemprop="articleBody">
-        <h2 id="1-传统IO"><a href="#1-传统IO" class="headerlink" title="1. 传统IO"></a>1. 传统IO</h2><img src="\images\图片\Typora\image-20221216102206916.png" alt="image-20221216102206916" style="zoom: 80%;" />
+        <h2 id="1-传统IO"><a href="#1-传统IO" class="headerlink" title="1. 传统IO"></a>1. 传统IO</h2><img src="\images\图片\typora\image-20221216102206916.png" alt="image-20221216102206916" style="zoom: 80%;" />
 
 <h2 id="1-什么是零拷贝"><a href="#1-什么是零拷贝" class="headerlink" title="1.什么是零拷贝"></a>1.什么是零拷贝</h2><blockquote>
 <p>零拷贝是指计算机在执行IO操作的时候, CPU不需要将数据从一个存储区复制到另一个存储区, 进而减少上下文切换以及 CPU 拷贝的时间, 这是一种<code>IO操作优化技术</code></p>
@@ -235,7 +235,7 @@
 <h2 id="2-实现方式"><a href="#2-实现方式" class="headerlink" title="2. 实现方式"></a>2. 实现方式</h2><h3 id="2-1-mmap-write"><a href="#2-1-mmap-write" class="headerlink" title="2.1.mmap + write"></a>2.1.<code>mmap + write</code></h3><blockquote>
 <p> 虚拟内存把内核空间和用户空间的虚拟地址映射到同一个物理地址, 从而减少数据拷贝次数, <code>mmap</code>技术就是利用了虚拟内存的这个特点, 它将内核中的读缓冲区与用户空间的缓冲区进行映射, 所有的IO操作都在内核中完成</p>
 </blockquote>
-<img src="\images\图片\Typora\image-20221216094826291.png" alt="image-20221216094826291" style="zoom:80%;" />
+<img src="\images\图片\typora\image-20221216094826291.png" alt="image-20221216094826291" style="zoom:80%;" />
 
 <pre><code>1. 用户进程通过`mmap `方法向操作系统内核发起 IO 调用，上下文从用户态切换为内
 </code></pre>
@@ -251,7 +251,7 @@
 <h3 id="2-2-sendfile"><a href="#2-2-sendfile" class="headerlink" title="2.2 sendfile"></a>2.2 <code>sendfile</code></h3><blockquote>
 <p> <code>sendfile</code> 表示在两个文件描述符之间传输数据，它是在操作系统内核中操作的，<br>避免了数据从内核缓冲区和用户缓冲区之间的拷贝操作</p>
 </blockquote>
-<img src="\images\图片\Typora\image-20221216095340338.png" alt="image-20221216095340338" style="zoom:80%;" />
+<img src="\images\图片\typora\image-20221216095340338.png" alt="image-20221216095340338" style="zoom:80%;" />
 
 <ol>
 <li><p>用户进程发起·<code>sendfile</code> 系统调用，上下文（切换 1）从用户态转向内核态</p>
@@ -269,7 +269,7 @@
 <h3 id="2-3-带DMA收集功能sendfile-sendfile-DMA-Scatter-Gather"><a href="#2-3-带DMA收集功能sendfile-sendfile-DMA-Scatter-Gather" class="headerlink" title="2.3 带DMA收集功能sendfile (sendfile+DMA Scatter/Gather)"></a>2.3 带<code>DMA</code>收集功能<code>sendfile</code> (<code>sendfile+DMA Scatter/Gather</code>)</h3><blockquote>
 <p><code>linux 2.4</code>版本之后，对<code>sendfile</code>做了优化升级，引入<code>SG-DMA</code>技术，其实就是对<code>DMA</code>拷贝加入了<code>scatter/gather</code>操作，它可以直接从内核空间缓冲区中将数据读取到网卡。使用这个特点搞零拷贝，即还可以多省去<strong>一次CPU拷贝</strong>。</p>
 </blockquote>
-<img src="\images\图片\Typora\image-20221216100335792.png" alt="image-20221216100335792" style="zoom:80%;" />
+<img src="\images\图片\typora\image-20221216100335792.png" alt="image-20221216100335792" style="zoom:80%;" />
 
 <ol>
 <li>用户进程发起<code>sendfile</code>系统调用，<strong>上下文（切换1）从用户态转向内核态</strong></li>
@@ -282,7 +282,7 @@
 <h2 id="3-DMA-技术说明"><a href="#3-DMA-技术说明" class="headerlink" title="3. DMA 技术说明"></a>3. <code>DMA</code> 技术说明</h2><blockquote>
 <p><code>DMA</code>，英文全称是<strong>Direct Memory Access</strong>，即直接内存访问。**<code>DMA</code><strong>本质上是一块主板上独立的芯片，允许外设设备和内存存储器之间直接进行IO数据传输，其过程</strong>不需要CPU的参与**。</p>
 </blockquote>
-<p><img src="/%5Cimages%5C%E5%9B%BE%E7%89%87%5CTypora%5Cimage-20221216101217488.png" alt="image-20221216101217488"></p>
+<p><img src="/%5Cimages%5C%E5%9B%BE%E7%89%87%5Ctypora%5Cimage-20221216101217488.png" alt="image-20221216101217488"></p>
 <h2 id="4-应用场景"><a href="#4-应用场景" class="headerlink" title="4.应用场景"></a>4.应用场景</h2><p><code>RocketMQ</code>和<code>Kafka</code>都使用到了零拷贝的技术。</p>
 <p>对于<code>MQ</code>而言，无非就是生产者发送数据到<code>MQ</code>然后持久化到磁盘，之后消费者从<code>MQ</code>读取数据。</p>
 <p>对于<code>RocketMQ</code>来说这两个步骤使用的是<code>mmap+write</code>，而Kafka则是使用<code>mmap+write</code>持久化数据，发送数据使用<code>sendfile</code></p>
