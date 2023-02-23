@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 6.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="/lib/@fortawesome/fontawesome-free/css/all.min.css" integrity="sha256-Z1K5uhUaJXA7Ll0XrZ/0JhX4lAtZFpT6jkKrEDT0drU=" crossorigin="anonymous">
+  <link rel="stylesheet" href="/lib/animate.css/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"chenguanghua.github.io","root":"/","images":"/images","scheme":"Pisces","darkmode":false,"version":"8.14.2","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":{"enable":true,"style":"mac"},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="高可用 多副本机制  主副本和从副本，从副本只负责同步主副本数据，只有主副本进行读写。 高并发网络结构设计 多路复用 多selector -&gt; 多线程-&gt; 多队列  高性能写 把数据先写入os cache 然后顺序写入磁盘  读 根据稀疏索引快速定位到要消费消息 零拷贝机制，减少上下文切换和cpu拷贝  如何提高吞吐量 设置缓存区数据量 开启压缩 设置合适批大小batch.size，">
+<meta property="og:type" content="article">
+<meta property="og:title" content="kafak总结">
+<meta property="og:url" content="https://chenguanghua.github.io/2022/12/15/kafak/index.html">
+<meta property="og:site_name" content="热心的蚂蚁的博客">
+<meta property="og:description" content="高可用 多副本机制  主副本和从副本，从副本只负责同步主副本数据，只有主副本进行读写。 高并发网络结构设计 多路复用 多selector -&gt; 多线程-&gt; 多队列  高性能写 把数据先写入os cache 然后顺序写入磁盘  读 根据稀疏索引快速定位到要消费消息 零拷贝机制，减少上下文切换和cpu拷贝  如何提高吞吐量 设置缓存区数据量 开启压缩 设置合适批大小batch.size，">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2022-12-15T00:14:16.000Z">
+<meta property="article:modified_time" content="2023-02-23T09:31:29.628Z">
+<meta property="article:author" content="热心的蚂蚁">
+<meta property="article:tag" content="架构">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://chenguanghua.github.io/2022/12/15/kafak/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://chenguanghua.github.io/2022/12/15/kafak/","path":"2022/12/15/kafak/","title":"kafak总结"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>kafak总结 | 热心的蚂蚁的博客</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">热心的蚂蚁的博客</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/%E9%A6%96%E9%A1%B5" rel="section">首页</a></li>
+  </ul>
+</nav>
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%AB%98%E5%8F%AF%E7%94%A8"><span class="nav-number">1.</span> <span class="nav-text">高可用</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%AB%98%E5%B9%B6%E5%8F%91"><span class="nav-number">2.</span> <span class="nav-text">高并发</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%AB%98%E6%80%A7%E8%83%BD"><span class="nav-number">3.</span> <span class="nav-text">高性能</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%86%99"><span class="nav-number">3.1.</span> <span class="nav-text">写</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%AF%BB"><span class="nav-number">3.2.</span> <span class="nav-text">读</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%A6%82%E4%BD%95%E6%8F%90%E9%AB%98%E5%90%9E%E5%90%90%E9%87%8F"><span class="nav-number">4.</span> <span class="nav-text">如何提高吞吐量</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%87%8D%E8%AF%95%E6%9C%BA%E5%88%B6%E5%B8%A6%E6%9D%A5%E9%97%AE%E9%A2%98"><span class="nav-number">5.</span> <span class="nav-text">重试机制带来问题</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%81%8F%E7%A7%BB%E9%87%8F%E7%AE%A1%E7%90%86"><span class="nav-number">6.</span> <span class="nav-text">偏移量管理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%B6%88%E8%B4%B9%E5%BC%82%E5%B8%B8%E6%84%9F%E7%9F%A5"><span class="nav-number">7.</span> <span class="nav-text">消费异常感知</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%B6%88%E8%B4%B9%E8%80%85%E6%98%AF%E5%A6%82%E4%BD%95%E5%AE%9E%E7%8E%B0rebalance%E7%9A%84%EF%BC%9F"><span class="nav-number">8.</span> <span class="nav-text">消费者是如何实现rebalance的？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%B0%88%E8%B0%88Kafka%E5%AE%A2%E6%88%B7%E7%AB%AF%E5%A6%82%E4%BD%95%E5%B7%A7%E5%A6%99%E8%A7%A3%E5%86%B3JVM-GC%E9%97%AE%E9%A2%98%EF%BC%9F"><span class="nav-number">9.</span> <span class="nav-text">谈谈Kafka客户端如何巧妙解决JVM GC问题？</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-Kafka-%E5%AE%A2%E6%88%B7%E7%AB%AF%E7%BC%93%E5%86%B2%E6%9C%BA%E5%88%B6"><span class="nav-number">9.1.</span> <span class="nav-text">1. Kafka 客户端缓冲机制</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#kafka%E5%BC%80%E5%90%AF%E7%B2%BE%E7%A1%AE%E5%8F%91%E9%80%81%E4%B8%80%E6%AC%A1"><span class="nav-number">10.</span> <span class="nav-text">kafka开启精确发送一次</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%B0%88%E8%B0%88%E4%BD%A0%E5%AF%B9Kafka%E6%8E%A7%E5%88%B6%E5%99%A8%E5%8F%8A%E9%80%89%E4%B8%BE%E6%9C%BA%E5%88%B6%E6%98%AF%E5%A6%82%E4%BD%95%E7%90%86%E8%A7%A3"><span class="nav-number">11.</span> <span class="nav-text">谈谈你对Kafka控制器及选举机制是如何理解</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#HW-%E5%92%8CLEO-%E7%90%86%E8%A7%A3"><span class="nav-number">12.</span> <span class="nav-text">HW 和LEO 理解</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%B0%88%E8%B0%88-Kafka-%E6%B6%88%E6%81%AF%E5%88%86%E9%85%8D%E7%AD%96%E7%95%A5%E9%83%BD%E6%9C%89%E5%93%AA%E4%BA%9B%EF%BC%9F"><span class="nav-number">13.</span> <span class="nav-text">谈谈 Kafka 消息分配策略都有哪些？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Rebalance-%E8%A7%A6%E5%8F%91%E5%90%8E%E5%A6%82%E4%BD%95%E9%80%9A%E7%9F%A5%E5%85%B6%E4%BB%96-Consumer-%E8%BF%9B%E7%A8%8B%EF%BC%9F"><span class="nav-number">14.</span> <span class="nav-text">Rebalance 触发后如何通知其他 Consumer 进程？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%B0%88%E8%B0%88Kafka%E7%BA%BF%E4%B8%8A%E5%A4%A7%E9%87%8F%E6%B6%88%E6%81%AF%E7%A7%AF%E5%8E%8B%E4%BD%A0%E6%98%AF%E5%A6%82%E4%BD%95%E5%A4%84%E7%90%86%E7%9A%84%EF%BC%9F"><span class="nav-number">15.</span> <span class="nav-text">谈谈Kafka线上大量消息积压你是如何处理的？</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">热心的蚂蚁</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">44</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">13</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">7</span>
+        <span class="site-state-item-name">标签</span>
+      </div>
+  </nav>
+</div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://chenguanghua.github.io/2022/12/15/kafak/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="热心的蚂蚁">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="热心的蚂蚁的博客">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="kafak总结 | 热心的蚂蚁的博客">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          kafak总结
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2022-12-15 08:14:16" itemprop="dateCreated datePublished" datetime="2022-12-15T08:14:16+08:00">2022-12-15</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2023-02-23 17:31:29" itemprop="dateModified" datetime="2023-02-23T17:31:29+08:00">2023-02-23</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/java/" itemprop="url" rel="index"><span itemprop="name">java</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <h2 id="高可用"><a href="#高可用" class="headerlink" title="高可用"></a>高可用</h2><blockquote>
+<p>多副本机制</p>
+</blockquote>
+<p>主副本和从副本，从副本只负责同步主副本数据，只有主副本进行读写。</p>
+<h2 id="高并发"><a href="#高并发" class="headerlink" title="高并发"></a>高并发</h2><p>网络结构设计</p>
+<p>多路复用</p>
+<p>多selector -&gt; 多线程-&gt; 多队列 </p>
+<h2 id="高性能"><a href="#高性能" class="headerlink" title="高性能"></a>高性能</h2><h3 id="写"><a href="#写" class="headerlink" title="写"></a>写</h3><ul>
+<li>把数据先写入os cache</li>
+<li>然后顺序写入磁盘</li>
+</ul>
+<h3 id="读"><a href="#读" class="headerlink" title="读"></a>读</h3><ul>
+<li>根据稀疏索引快速定位到要消费消息</li>
+<li>零拷贝机制，减少上下文切换和cpu拷贝</li>
+</ul>
+<h2 id="如何提高吞吐量"><a href="#如何提高吞吐量" class="headerlink" title="如何提高吞吐量"></a>如何提高吞吐量</h2><ul>
+<li>设置缓存区数据量</li>
+<li>开启压缩</li>
+<li>设置合适批大小batch.size， 太小网络请求频繁，太大导致发送消息慢</li>
+</ul>
+<h2 id="重试机制带来问题"><a href="#重试机制带来问题" class="headerlink" title="重试机制带来问题"></a>重试机制带来问题</h2><ul>
+<li>消息会重复： 幂等支持</li>
+<li>消息乱序：  <code>max.in.flight.requests.per.connection</code>&#x3D;1  producer 同一时间只能发送一条消息，默认重试间隔： <code>retry.backoff.ms</code>&#x3D;100</li>
+</ul>
+<h2 id="偏移量管理"><a href="#偏移量管理" class="headerlink" title="偏移量管理"></a>偏移量管理</h2><p>每个consumer内存里数据结构保存对每个topic的每个分区的消费offset，定期会提交offset,老kafak写入<code>zookeeper</code>（废弃）。</p>
+<p>提交offset发送给<code>kafka</code>内部topic：__consumer_offsets，提交过去的时候， key是<code>group.id</code>+topic+分区号，value就是当前offset的值，每隔一段时间，<code>kafka</code>内部会对这个topic进行compact(合并)，也就是每个<code>group.id</code>+topic+分区号就保留最新数据</p>
+<h2 id="消费异常感知"><a href="#消费异常感知" class="headerlink" title="消费异常感知"></a>消费异常感知</h2><ul>
+<li><code>heartbeat.interval.ms：consumer</code>心跳时间间隔，必须得与coordinator保持心跳才能知道consumer是否故障了， 然后如果故障之后，就会通过心跳下发<code>rebalance</code>的指令给其他的consumer通知他们进行<code>rebalance</code>的操作</li>
+<li><code>session.timeout.ms</code>：<code>kafka</code>多长时间感知不到一个consumer就认为他故障了，默认是10</li>
+<li><code>max.poll.interval.ms</code>：如果在两次poll操作之间，超过了这个时间，那么就会认为这个consume处理能力太弱了，会被踢出消费组，分区分配给别人去消费，一般来说结合业务处理的性能来设置就可以了。</li>
+</ul>
+<h2 id="消费者是如何实现rebalance的？"><a href="#消费者是如何实现rebalance的？" class="headerlink" title="消费者是如何实现rebalance的？"></a>消费者是如何实现rebalance的？</h2><blockquote>
+<p>根据coordinator实现</p>
+</blockquote>
+<ul>
+<li><ol>
+<li>什么是coordinator 每个consumer group都会选择一个broker作为自己的coordinator，他是负责监控这个消费组里的各个消费者的心跳，以及判断是否宕机，然后开启rebalance的</li>
+</ol>
+</li>
+<li><p>如何选择coordinator机器 首先对groupId进行hash（数字），接着对__consumer_offsets的分区数量取模，默认是50，_consumer_offsets的分区数可以通过offsets.topic.num.partitions来设置，找到分区以后，这个分区所在的broker机器就是coordinator机器。比如说：groupId，“myconsumer_group” -&gt; hash值（数字）-&gt; 对50取模 -&gt; 8 __consumer_offsets 这个主题的8号分区在哪台broker上面，那一台就是coordinator 就知道这个consumer group下的所有的消费者提交offset的时候是往哪个分区去提交offset，</p>
+</li>
+<li><p>(1)每个consumer都发送<code>JoinGroup</code>请求到Coordinator,然后Coordinator从一个consumer group中选择一个consumer作为leader(第一个)，Coordinator把consumer group情况发送给这个leader，leader定制消费方案，通过SyncGroup发给Coordinator，接着Coordinator就把消费方案下发给各个consumer，他们会从指定的分区的 leader broker开始进行socket连接以及消费消息。</p>
+</li>
+</ul>
+<h2 id="谈谈Kafka客户端如何巧妙解决JVM-GC问题？"><a href="#谈谈Kafka客户端如何巧妙解决JVM-GC问题？" class="headerlink" title="谈谈Kafka客户端如何巧妙解决JVM GC问题？"></a>谈谈Kafka客户端如何巧妙解决JVM GC问题？</h2><h3 id="1-Kafka-客户端缓冲机制"><a href="#1-Kafka-客户端缓冲机制" class="headerlink" title="1. Kafka 客户端缓冲机制"></a>1. <strong>Kafka 客户端缓冲机制</strong></h3><p>kafak Produer 流程</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">1）进行 Producer 初始化，加载配置参数，开启网络线程。</span><br><span class="line"></span><br><span class="line">2）执行拦截器逻辑，预处理消息, 封装 Producer Record。</span><br><span class="line"></span><br><span class="line">3）调用 Serializer.serialize() 方法进行消息的 key/value 序列化。</span><br><span class="line"></span><br><span class="line">4）调用 partition() 选择合适的分区策略，给消息体 Producer Record 分配要发送的 Topic 分区号。</span><br><span class="line"></span><br><span class="line">5）从 Kafka Broker 集群获取集群元数据 metadata。</span><br><span class="line"></span><br><span class="line">6）将消息缓存到 RecordAccumulator 收集器中, 最后判断是否要发送。这个加入消息收集器，首先得从 Deque&lt;RecordBatch&gt; 里找到自己的目标分区，如果没有就新建一个 Batch 消息 Deque 加进入。</span><br><span class="line"></span><br><span class="line">7）当达到发送阈值，唤醒 Sender 线程，实例化 NetWorkClient 将 batch record 转换成 request client 的发送消息体, 并将待发送的数据按 【Broker Id &lt;=&gt; List】的数据进行归类。</span><br><span class="line"></span><br><span class="line">8）与服务端不同的 Broker 建立网络连接，将对应 Broker 待发送的消息 List 发送出去。</span><br><span class="line"></span><br><span class="line">9）批次发送的条件为: 缓冲区数据大小达到 batch.size 或者 linger.ms 达到上限，哪个先达到就算哪个。</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p><strong>Kafka 实现的缓冲机制</strong> ,减少垃圾回收，降低STW</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">在 Kafka 客户端内部，针对这个问题实现了一个非常优秀的机制，就是「缓冲池机制」。即每个 Batch 底层都对应一块内存空间，这个内存空间就是专门用来存放写进去的消息。</span><br><span class="line"></span><br><span class="line">当一个 Batch 数据被发送到了 kafka 服务端，这个 Batch 的内存空间不再使用了。此时这个 Batch 底层的内存空间先不交给 JVM 去垃圾回收，而是把这块内存空间给放入一个缓冲池里。</span><br><span class="line"></span><br><span class="line">这个缓冲池里存放了很多块内存空间，下次如果有一个新的 Batch 数据了，那么直接从缓冲池获取一块内存空间是不是就可以了？然后如果一个 Batch 数据发送出去了之后，再把内存空间还回来是不是就可以了？以此类推，循环往复。</span><br></pre></td></tr></table></figure>
+
+<h2 id="kafka开启精确发送一次"><a href="#kafka开启精确发送一次" class="headerlink" title="kafka开启精确发送一次"></a><code>kafka</code>开启精确发送一次</h2><p>通过引入「<code>PID</code>及Sequence Number」支持幂等性，保证精确一次「exactly once」语义。</p>
+<p>其中启用幂等传递的方法配置：<code>enable.idempotence</code> &#x3D; true。启用事务支持的方法配置：设置属性 <code>transcational.id </code>&#x3D; “指定值”。</p>
+<h2 id="谈谈你对Kafka控制器及选举机制是如何理解"><a href="#谈谈你对Kafka控制器及选举机制是如何理解" class="headerlink" title="谈谈你对Kafka控制器及选举机制是如何理解"></a>谈谈你对Kafka控制器及选举机制是如何理解</h2><p>所谓的控制器「Controller」就是通过 ZooKeeper 来管理和协调整个 Kafka 集群的组件。集群中任意一台 Broker 都可以充当控制器的角色，但是在正常运行过程中，只能有一个 Broker 成为控制器。</p>
+<p>控制器的职责主要包括：</p>
+<p>1）集群元信息管理及更新同步 (Topic路由信息等)。</p>
+<p>2）主题管理（创建、删除、增加分区等）。</p>
+<p>3）分区重新分配。</p>
+<p>4）副本故障转移、 Leader 选举、ISR 变更。</p>
+<p>5）集群成员管理（通过 watch 机制自动检测新增 Broker、Broker 主动关闭、Broker 宕机等）。</p>
+<p>在2.x中 zookeeper作用： 帮助kafka选择controller ，通知controller节点关闭或者加入</p>
+<p>Kafka 3.X 版本中，内部实现一个类似于 Raft 的共识算法来选举 Controller</p>
+<h2 id="HW-和LEO-理解"><a href="#HW-和LEO-理解" class="headerlink" title="HW 和LEO 理解"></a>HW 和LEO 理解</h2><p>HW 作用：</p>
+<p>1）用来标识分区下的哪些消息是可以被消费者消费的。</p>
+<p>2）协助 Kafka 完成副本数据同步。</p>
+<p>LEO 作用：</p>
+<p>1）如果 Follower 和 Leader 的 LEO 数据同步了, 那么 HW 就可以更新了。</p>
+<p>2）HW 之前的消息数据对消费者是可见的，属于 commited 状态,  HW 之后的消息数据对消费者是不可见的。</p>
+<h2 id="谈谈-Kafka-消息分配策略都有哪些？"><a href="#谈谈-Kafka-消息分配策略都有哪些？" class="headerlink" title="谈谈 Kafka 消息分配策略都有哪些？"></a>谈谈 Kafka 消息分配策略都有哪些？</h2><ul>
+<li><p>RangeAssignor 是 Kafka 默认的分区分配算法，它是按照 Topic 的维度进行分配的，首先对 每个Topic 的 Partition 按照分区ID进行排序，然后对订阅该 Topic 的 Consumer Group 的 Consumer 按名称字典进行排序，之后尽量均衡的按照范围区段将分区分配给 Consumer。此时也可能会造成先分配分区的 Consumer 任务过重（分区数无法被消费者数量整除）</p>
+</li>
+<li><p>RoundRobinAssignor： </p>
+</li>
+<li><p>该分区分配策略是将 Consumer Group 订阅的所有 Topic 的 Partition 及所有 Consumer 按照字典进行排序后尽量均衡的挨个进行分配。如果 Consumer Group 内，每个 Consumer 订阅都订阅了相同的Topic，那么分配结果是均衡的。如果订阅 Topic 是不同的，那么分配结果是不保证「 尽量均衡」的，因为某些 Consumer 可能不参与一些 Topic 的分配</p>
+</li>
+<li><p>StickyAssignor</p>
+<p>该分区分配算法是最复杂的一种，可以通过 partition.assignment.strategy 参数去设置，从 0.11 版本开始引入，目的就是在执行新分配时，尽量在上一次分配结果上少做调整，其主要实现了以下2个目标：</p>
+<p>1、Topic Partition 的分配要尽量均衡。</p>
+<p>2、当 Rebalance 发生时，尽量与上一次分配结果保持一致。</p>
+</li>
+</ul>
+<h2 id="Rebalance-触发后如何通知其他-Consumer-进程？"><a href="#Rebalance-触发后如何通知其他-Consumer-进程？" class="headerlink" title="Rebalance 触发后如何通知其他 Consumer 进程？"></a>Rebalance 触发后如何通知其他 Consumer 进程？</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">rebalance 的通知机制就是靠 Consumer 端的心跳线程，它会定期发送心跳请求到 Broker 端的 Coordinator 协调者组件,当协调者决定开启 Rebalance 后，它会将「REBALANCE_IN_PROGRESS」封装进心跳请求的响应中发送给 Consumer ,当 Consumer 发现心跳响应中包含了「REBALANCE_IN_PROGRESS」，就知道是 Rebalance 开始了。</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h2 id="谈谈Kafka线上大量消息积压你是如何处理的？"><a href="#谈谈Kafka线上大量消息积压你是如何处理的？" class="headerlink" title="谈谈Kafka线上大量消息积压你是如何处理的？"></a>谈谈Kafka线上大量消息积压你是如何处理的？</h2><p>事前：</p>
+<ul>
+<li>避免大消息发送</li>
+<li>分区数和消费组数尽量相等</li>
+<li>优化消费端逻辑，避免重平衡</li>
+</ul>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E6%9E%B6%E6%9E%84/" rel="tag"># 架构</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2022/09/15/oauth2/" rel="prev" title="oauth2学习">
+                  <i class="fa fa-chevron-left"></i> oauth2学习
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2023/02/22/hello-world/" rel="next" title="Hello World">
+                  Hello World <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">热心的蚂蚁</span>
+</div>
+<!--
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/pisces/" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+
+-->
+    </div>
+  </footer>
+
+  
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="/lib/animejs/lib/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+
+
+
+  
+
+
+
+
+
+</body>
+</html>

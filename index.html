@@ -125,11 +125,11 @@
       </div>
       <div class="site-state-item site-state-categories">
           <a href="/categories/">
-        <span class="site-state-item-count">2</span>
+        <span class="site-state-item-count">13</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
-        <span class="site-state-item-count">4</span>
+        <span class="site-state-item-count">7</span>
         <span class="site-state-item-name">标签</span>
       </div>
   </nav>
@@ -146,6 +146,158 @@
     </div>
 
     <div class="main-inner index posts-expand">
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://chenguanghua.github.io/2023/08/15/%E9%9B%B6%E6%8B%B7%E8%B4%9D/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="热心的蚂蚁">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="热心的蚂蚁的博客">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="undefined | 热心的蚂蚁的博客">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2023/08/15/%E9%9B%B6%E6%8B%B7%E8%B4%9D/" class="post-title-link" itemprop="url">零拷贝</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2023-08-15 08:14:16" itemprop="dateCreated datePublished" datetime="2023-08-15T08:14:16+08:00">2023-08-15</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2023-02-23 17:25:57" itemprop="dateModified" datetime="2023-02-23T17:25:57+08:00">2023-02-23</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/java/" itemprop="url" rel="index"><span itemprop="name">java</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h2 id="1-传统IO"><a href="#1-传统IO" class="headerlink" title="1. 传统IO"></a>1. 传统IO</h2><img src="\images\图片\Typora\image-20221216102206916.png" alt="image-20221216102206916" style="zoom: 80%;" />
+
+<h2 id="1-什么是零拷贝"><a href="#1-什么是零拷贝" class="headerlink" title="1.什么是零拷贝"></a>1.什么是零拷贝</h2><blockquote>
+<p>零拷贝是指计算机在执行IO操作的时候, CPU不需要将数据从一个存储区复制到另一个存储区, 进而减少上下文切换以及 CPU 拷贝的时间, 这是一种<code>IO操作优化技术</code></p>
+<p>零拷贝不是没有拷贝数据, 而是<code>减少用户态, 内核态的切换次数 和 CPU拷贝次数</code></p>
+</blockquote>
+<h2 id="2-实现方式"><a href="#2-实现方式" class="headerlink" title="2. 实现方式"></a>2. 实现方式</h2><h3 id="2-1-mmap-write"><a href="#2-1-mmap-write" class="headerlink" title="2.1.mmap + write"></a>2.1.<code>mmap + write</code></h3><blockquote>
+<p> 虚拟内存把内核空间和用户空间的虚拟地址映射到同一个物理地址, 从而减少数据拷贝次数, <code>mmap</code>技术就是利用了虚拟内存的这个特点, 它将内核中的读缓冲区与用户空间的缓冲区进行映射, 所有的IO操作都在内核中完成</p>
+</blockquote>
+<img src="\images\图片\Typora\image-20221216094826291.png" alt="image-20221216094826291" style="zoom:80%;" />
+
+<pre><code>1. 用户进程通过`mmap `方法向操作系统内核发起 IO 调用，上下文从用户态切换为内
+</code></pre>
+<p>核态。</p>
+<ol start="2">
+<li>CPU 利用<code>DMA </code>控制器，把数据从硬盘中拷贝到内核缓冲区。</li>
+<li>上下文从内核态切换回用户态，<code>mmap</code> 方法返回。</li>
+<li>用户进程通过write 方法向操作系统内核发起IO 调用，上下文从用户态切换为内<br>核态。</li>
+<li>CPU 将内核缓冲区的数据拷贝到的 socket 缓冲区。</li>
+<li>CPU 利用<code>DMA</code> 控制器，把数据从 socket 缓冲区拷贝到网卡，上下文从内核态切<br>换回用户态，write 调用返回。</li>
+</ol>
+<p><code>mmap+write</code> 实现的零拷贝，I&#x2F;O 发生了4次用户空间与内核空间的上下文切<br>换，以及3 次数据拷贝（包括了2次<code>DMA</code>拷贝和1 次CPU 拷贝）。</p>
+<h3 id="2-2-sendfile"><a href="#2-2-sendfile" class="headerlink" title="2.2 sendfile"></a>2.2 <code>sendfile</code></h3><blockquote>
+<p> <code>sendfile</code> 表示在两个文件描述符之间传输数据，它是在操作系统内核中操作的，<br>避免了数据从内核缓冲区和用户缓冲区之间的拷贝操作</p>
+</blockquote>
+<img src="\images\图片\Typora\image-20221216095340338.png" alt="image-20221216095340338" style="zoom:80%;" />
+
+<ol>
+<li><p>用户进程发起·<code>sendfile</code> 系统调用，上下文（切换 1）从用户态转向内核态</p>
+</li>
+<li><p><code>DMA </code>控制器，把数据从硬盘中拷贝到内核缓冲区。</p>
+</li>
+<li><p><code>CPU</code> 将读缓冲区中数据拷贝到 socket 缓冲区</p>
+</li>
+<li><p><code>DMA</code> 控制器，异步把数据从 socket 缓冲区拷贝到网卡，</p>
+</li>
+<li><p>上下文（切换2）从内核态切换回用户态，<code>sendfile</code> 调用返回。</p>
+</li>
+</ol>
+<p>  2次上下文切换，2次<code>DMA</code>拷贝，一次<code>cpu</code> 拷贝</p>
+<h3 id="2-3-带DMA收集功能sendfile-sendfile-DMA-Scatter-Gather"><a href="#2-3-带DMA收集功能sendfile-sendfile-DMA-Scatter-Gather" class="headerlink" title="2.3 带DMA收集功能sendfile (sendfile+DMA Scatter/Gather)"></a>2.3 带<code>DMA</code>收集功能<code>sendfile</code> (<code>sendfile+DMA Scatter/Gather</code>)</h3><blockquote>
+<p><code>linux 2.4</code>版本之后，对<code>sendfile</code>做了优化升级，引入<code>SG-DMA</code>技术，其实就是对<code>DMA</code>拷贝加入了<code>scatter/gather</code>操作，它可以直接从内核空间缓冲区中将数据读取到网卡。使用这个特点搞零拷贝，即还可以多省去<strong>一次CPU拷贝</strong>。</p>
+</blockquote>
+<img src="\images\图片\Typora\image-20221216100335792.png" alt="image-20221216100335792" style="zoom:80%;" />
+
+<ol>
+<li>用户进程发起<code>sendfile</code>系统调用，<strong>上下文（切换1）从用户态转向内核态</strong></li>
+<li><code>DMA</code>控制器，把数据从硬盘中拷贝到内核缓冲区。</li>
+<li>CPU把内核缓冲区中的<strong>文件描述符信息</strong>（包括内核缓冲区的内存地址和偏移量）发送到socket缓冲区</li>
+<li><code>DMA</code>控制器根据文件描述符信息，直接把数据从内核缓冲区拷贝到网卡</li>
+<li><strong>上下文（切换2）从内核态切换回用户态</strong>，<code>sendfile</code>调用返回。</li>
+</ol>
+<p>​         可以发现，<code>sendfile+DMA scatter/gather</code>实现的零拷贝，I&#x2F;O发生了<strong>2</strong>次用户空间与内核空间的上下文切换，以及2次数据拷贝。其中2次数据拷贝都是包**<code>DMA</code>拷贝**。这就是真正的 <strong>零拷贝（Zero-copy)</strong> 技术，全程都没有通过CPU来搬运数据，所有的数据都是通过<code>DMA</code>来进行传输的。</p>
+<h2 id="3-DMA-技术说明"><a href="#3-DMA-技术说明" class="headerlink" title="3. DMA 技术说明"></a>3. <code>DMA</code> 技术说明</h2><blockquote>
+<p><code>DMA</code>，英文全称是<strong>Direct Memory Access</strong>，即直接内存访问。**<code>DMA</code><strong>本质上是一块主板上独立的芯片，允许外设设备和内存存储器之间直接进行IO数据传输，其过程</strong>不需要CPU的参与**。</p>
+</blockquote>
+<p><img src="/%5Cimages%5C%E5%9B%BE%E7%89%87%5CTypora%5Cimage-20221216101217488.png" alt="image-20221216101217488"></p>
+<h2 id="4-应用场景"><a href="#4-应用场景" class="headerlink" title="4.应用场景"></a>4.应用场景</h2><p><code>RocketMQ</code>和<code>Kafka</code>都使用到了零拷贝的技术。</p>
+<p>对于<code>MQ</code>而言，无非就是生产者发送数据到<code>MQ</code>然后持久化到磁盘，之后消费者从<code>MQ</code>读取数据。</p>
+<p>对于<code>RocketMQ</code>来说这两个步骤使用的是<code>mmap+write</code>，而Kafka则是使用<code>mmap+write</code>持久化数据，发送数据使用<code>sendfile</code></p>
+<h2 id="5-java对零拷贝支持"><a href="#5-java对零拷贝支持" class="headerlink" title="5.java对零拷贝支持"></a>5.<code>java</code>对零拷贝支持</h2><ul>
+<li>Java <code>NIO</code>对<code>mmap</code>的支持</li>
+</ul>
+<p>​    <code> MappedByteBuffer</code></p>
+<ul>
+<li>Java <code>NIO</code>对<code>sendfile</code>的支持</li>
+</ul>
+<p><code>FileChannel</code>的<code>transferTo()/transferFrom()</code>，底层就是<code>sendfile()</code> 系统调用函数</p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
 
     
 
@@ -318,716 +470,6 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://chenguanghua.github.io/2023/02/22/tomcat/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="热心的蚂蚁">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="热心的蚂蚁的博客">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="undefined | 热心的蚂蚁的博客">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2023/02/22/tomcat/" class="post-title-link" itemprop="url">未命名</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-
-      <time title="创建时间：2023-02-22 17:16:51" itemprop="dateCreated datePublished" datetime="2023-02-22T17:16:51+08:00">2023-02-22</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2023-02-07 17:15:45" itemprop="dateModified" datetime="2023-02-07T17:15:45+08:00">2023-02-07</time>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h2 id="1-tomcat-架构-整体架构"><a href="#1-tomcat-架构-整体架构" class="headerlink" title="1.tomcat 架构 整体架构"></a>1.tomcat 架构 整体架构</h2><p>（1）Tomcat中只有一个Server，一个Server可以有多个Service，一个Service可以有多个Connector和一个Container；<br>（2） Server掌管着整个Tomcat的生死大权；<br>（4）Service 是对外提供服务的；<br>（5）Connector用于接受请求并将请求封装成Request和Response来具体处理；<br>（6）Container用于封装和管理Servlet，以及具体处理request请求；</p>
-<h2 id="2-Connector架构"><a href="#2-Connector架构" class="headerlink" title="2.Connector架构"></a>2.Connector架构</h2><p><img src="/.%5Ctomcat%5Ctomcat.svg" alt="tomcat"></p>
-<blockquote>
-<p>Connector就是使用ProtocolHandler来处理请求的，不同的ProtocolHandler代表不同的连接类型，比如：Http11Protocol使用的是普通Socket来连接的，Http11NioProtocol使用的是NioSocket来连接的</p>
-</blockquote>
-<p>ProtocolHandler 包含三部分：EndPoint，Processor, Adapter</p>
-<ul>
-<li>EndPoint用于处理底层的socket的网络连接，封装成Request，Adapter用于将Requet 交给Container</li>
-<li>EndPoint 处理底层socket连接，因此实现TCP&#x2F;IP协议，Processor 实现了 Http协议</li>
-<li>Endpoint的抽象实现AbstractEndpoint里面定义的Acceptor和AsyncTimeout两个内部类和一个Handler接口。Acceptor用于监听请求，AsyncTimeout用于检查异步Request的超时，Handler用于处理接收到的Socket，在内部调用Processor进行处理</li>
-</ul>
-<h2 id="3-Container架构"><a href="#3-Container架构" class="headerlink" title="3. Container架构"></a>3. Container架构</h2><p><img src="/.%5Ctomcat%5CContainer%E6%9E%B6%E6%9E%84.svg" alt="Container架构"></p>
-<p>Engine：引擎，用来管理多个站点，一个Service最多只能有一个Engine</p>
-<p>host: 每个host代表一个虚拟主机</p>
-<p>context: 每个context 代表一个应用</p>
-<p>wrapper: 每个wrapper 代表一个servlet</p>
-<h2 id="4-container-如何处理请求"><a href="#4-container-如何处理请求" class="headerlink" title="4.container 如何处理请求"></a>4.container 如何处理请求</h2><blockquote>
-<p>Container处理请求是使用Pipeline-Value管道来处理的</p>
-</blockquote>
-<p>Container包含四个子容器，而这四个子容器对应的BaseValue分别在：StandardEngineValue、StandardHostValue、StandardContextValue、StandardWrapperValue</p>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://chenguanghua.github.io/2023/02/22/spring%E4%BA%8B%E5%8A%A1/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="热心的蚂蚁">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="热心的蚂蚁的博客">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="undefined | 热心的蚂蚁的博客">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2023/02/22/spring%E4%BA%8B%E5%8A%A1/" class="post-title-link" itemprop="url">未命名</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-
-      <time title="创建时间：2023-02-22 17:16:51" itemprop="dateCreated datePublished" datetime="2023-02-22T17:16:51+08:00">2023-02-22</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2023-02-17 16:56:41" itemprop="dateModified" datetime="2023-02-17T16:56:41+08:00">2023-02-17</time>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h2 id="spring-事务"><a href="#spring-事务" class="headerlink" title="spring 事务"></a>spring 事务</h2><h2 id="1-事务传播机制"><a href="#1-事务传播机制" class="headerlink" title="1. 事务传播机制"></a>1. 事务传播机制</h2><ul>
-<li><p>REQUIRED ： 如果当前没有事务，新建事务执行，存在事务，加入事务中运行</p>
-</li>
-<li><p>SUPPORTS :   支持当前事务。 如果当前存在事务，则加入事务，否则以非事务方式运行</p>
-</li>
-<li><p>MANDATORY :  强制要求事务，使用当前事务，如果没有抛出异常</p>
-</li>
-<li><p>NO_SUPPORTED: 不支持当前事务，如果存在事务，把事务挂起以非事务方式运行。</p>
-</li>
-<li><p>REQUIRED_NEW：需要事务，创建一个新的事务</p>
-</li>
-<li><p>NEVER:  不需要事务，当前存在事务，抛异常</p>
-</li>
-<li><p>NESTED : 如果当前存在事务，则在嵌套事务运行，否则新建事务</p>
-</li>
-</ul>
-<p><img src="/.%5C%E5%9B%BE%E7%89%87%5Ctypora%5Cimage-20221212095037158.png" alt="image-20221212095037158"></p>
-<p><code>REQUIRED</code> 和 <code>NESTED</code> 区别：</p>
-<p>两个方法都加了事务注解，并且两个方法都会受到到事务管理的拦截器增强，并且事务传播的方式都是默认的，也就是<code>REQUIRED</code>，当已经存在事务的时候就加入事务，没有就创建事务。这里A和B都受事务控制，并且是处于同一个事务的。</p>
-<p>A调用B，A中抓了B的异常，当B发生异常的时候，B的操作应该回滚，但是A吃了异常，A方法中没有产生异常，所以A的操作又应该提交，二者是相互矛盾的。</p>
-<p>spring的事务关联拦截器在抓到B的异常后就会标记<code>rollback-only</code>为<code>true</code>，当A执行完准备提交后，发现<code>rollback-only</code>为<code>true</code>，也会回滚，并抛出异常告诉调用者。</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">@Transactional(propagation=Propagation.REQUIRED)</span><br><span class="line">a()&#123;</span><br><span class="line">       a插入数据库;</span><br><span class="line">    try &#123;</span><br><span class="line">            b();</span><br><span class="line">        &#125; catch (Exception e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125;</span><br><span class="line"> </span><br><span class="line">&#125;</span><br><span class="line">@Transactional(propagation=Propagation.NESTED)</span><br><span class="line">b()&#123;</span><br><span class="line">    b插入数据库;</span><br><span class="line">   int xx=1/0;//抛出异常</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>上述代码 则只有b的插入回滚，a不回滚。原因是在进入NESTED方法时事务保存了当前b的<code>savepoint</code>，b异常只会回滚到b的<code>savepoint</code></p>
-<p>同时若在a方法中抛出异常，则a,b插入都会回滚</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">@Transactional(propagation=Propagation.REQUIRED)</span><br><span class="line">a()&#123;</span><br><span class="line">       a插入数据库;</span><br><span class="line">    try &#123;</span><br><span class="line">            b();</span><br><span class="line">        &#125; catch (Exception e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125;</span><br><span class="line">   int xx=1/0;//抛出异常</span><br><span class="line"> </span><br><span class="line">&#125;</span><br><span class="line">@Transactional(propagation=Propagation.NESTED)</span><br><span class="line">b()&#123;</span><br><span class="line">    b插入数据库;</span><br><span class="line"> </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p><strong>NESTED嵌套事务的奥秘之处—–它能让事务部分回滚</strong>(通过<code>savepoint</code>)</p>
-<p><strong>NESTED的回滚特性</strong></p>
-<ul>
-<li>主事务和嵌套事务属于同一个事务</li>
-<li>嵌套事务出错回滚不会影响到主事务</li>
-<li>主事务回滚会将嵌套事务一起回滚了</li>
-</ul>
-<p>NESTED事务跟REQUIRED事务区别就在这里，NESTED事务是回滚到回滚点，而回滚点生成是在进入内嵌事务的时候，外面事务是不会回滚的</p>
-<h2 id="2-声明式事务不生效原因"><a href="#2-声明式事务不生效原因" class="headerlink" title="2. 声明式事务不生效原因"></a>2. 声明式事务不生效原因</h2><ol>
-<li><p>数据库不支持事务</p>
-</li>
-<li><p>抛出检查下异常</p>
-</li>
-<li><p>方法内调用事务方法</p>
-</li>
-<li><p>创建类不接受spring管理</p>
-</li>
-<li><p>@Transaction修饰方法不是public</p>
-</li>
-<li><p>捕获了异常，未抛出</p>
-</li>
-</ol>
-<ol start="7">
-<li>配置多了事务管理器 如Mongo和mysql</li>
-</ol>
-<p>方法内互相调用失效问题： 绕过代理对象，事务使用代理对象来控制的，解决使用aspectj</p>
-<ul>
-<li><p>引入<code> aop-start; spring-boot-start-aop</code></p>
-</li>
-<li><p>开启 <code>@EnableAspectJautoProxy</code></p>
-<p><code>AopContext.currentProxy()</code></p>
-</li>
-</ul>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://chenguanghua.github.io/2023/02/22/springCloud/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="热心的蚂蚁">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="热心的蚂蚁的博客">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="undefined | 热心的蚂蚁的博客">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2023/02/22/springCloud/" class="post-title-link" itemprop="url">未命名</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-
-      <time title="创建时间：2023-02-22 17:16:51" itemprop="dateCreated datePublished" datetime="2023-02-22T17:16:51+08:00">2023-02-22</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2023-02-17 16:57:06" itemprop="dateModified" datetime="2023-02-17T16:57:06+08:00">2023-02-17</time>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h1 id="1-openFeign"><a href="#1-openFeign" class="headerlink" title="1.  openFeign"></a>1.  openFeign</h1><p> 为了保持向后兼容性，将用作默认负载平衡器实现。然而，Spring Cloud Netflix Ribbon现在处于维护模式，因此我们建议改用Spring Cloud LoadBalancer。为此，将spring.cloud.looadbalancer.ribbon.enabled的值设置为false。</p>
-<h2 id="1-1-覆盖默认配置"><a href="#1-1-覆盖默认配置" class="headerlink" title="1.1 覆盖默认配置"></a>1.1 覆盖默认配置</h2><p>​    默认Spring Cloud使用Spring Cloud使用FeignClientsConfiguration按需为每个命名的客户端创建一个新的集成作为ApplicationContext。这包含（除其他外）一个foreign.Decorder、一个foregn.Encoder和一个feign.Contract。可以使用@FeignClient注释的contextId属性重写该集合的名称按需为每个命名的客户端创建一个新的集成作为ApplicationContext。这包含（除其他外）一个foreign.Decorder、一个foregn.Encoder和一个feign.Contract。可以使用@FeignClient注释的contextId属性重写该集合的名称</p>
-<p>覆盖默认配置：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">@FeignClient(name = &quot;stores&quot;, configuration = FooConfiguration.class)</span><br><span class="line">public interface StoreClient &#123;</span><br><span class="line">    //..</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>注： FooConfiguration.class  不需要  <code>@Configuration</code>,否者会替换全局默认配置</p>
-<p>占位符方式支持 ：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">@FeignClient(name = &quot;$&#123;feign.name:chen&#125;&quot;, url = &quot;$&#123;feign.url&#125;&quot;)</span><br><span class="line">public interface StoreClient &#123;</span><br><span class="line">    //..</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>spring cloud 默认feign配置：</p>
-<ul>
-<li><code>Decoder</code> feignDecoder: <code>ResponseEntityDecoder</code> (which wraps a <code>SpringDecoder</code>)</li>
-<li><code>Encoder</code> feignEncoder: <code>SpringEncoder</code></li>
-<li><code>Logger</code> feignLogger: <code>Slf4jLogger</code></li>
-<li><code>Contract</code> feignContract: <code>SpringMvcContract</code></li>
-<li><code>Feign.Builder</code> feignBuilder: <code>HystrixFeign.Builder</code></li>
-</ul>
-<ul>
-<li><p>if Ribbon is in the classpath and is enabled it is a <code>LoadBalancerFeignClient</code>, otherwise if Spring Cloud LoadBalancer is in the classpath, <code>FeignBlockingLoadBalancerClient</code> is used. If none of them is in the classpath, the default feign client is used.</p>
-<p> feign.okhttp.enabled： true 支持okHttp</p>
-<p> feign.httpclient.enabled: true 支持httpClient</p>
-</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">@Configuration</span><br><span class="line">public class FooConfiguration &#123;</span><br><span class="line">    @Bean</span><br><span class="line">    public Contract feignContract() &#123;</span><br><span class="line">        return new feign.Contract.Default();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Bean</span><br><span class="line">    public BasicAuthRequestInterceptor basicAuthRequestInterceptor() &#123;</span><br><span class="line">        return new BasicAuthRequestInterceptor(&quot;user&quot;, &quot;password&quot;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p><code>feign.Contract.Default</code>代替FeignClientsConfiguration中的contract 并添加 <code>RequestInterceptor</code>到 <code>RequestInterceptor</code>集合</p>
-<p>也可以用配置文件覆盖：</p>
-<p>application.yaml</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">feign:</span><br><span class="line">  client:</span><br><span class="line">    config:</span><br><span class="line">      contextId:</span><br><span class="line">        connectTimeout: 5000</span><br><span class="line">        readTimeout: 5000</span><br><span class="line">        loggerLevel: full</span><br><span class="line">        errorDecoder: com.example.SimpleErrorDecoder</span><br><span class="line">        retryer: com.example.SimpleRetryer</span><br><span class="line">        requestInterceptors:</span><br><span class="line">          - com.example.FooRequestInterceptor</span><br><span class="line">          - com.example.BarRequestInterceptor</span><br><span class="line">        decode404: false</span><br><span class="line">        encoder: com.example.SimpleEncoder</span><br><span class="line">        decoder: com.example.SimpleDecoder</span><br><span class="line">        contract: com.example.SimpleContract</span><br></pre></td></tr></table></figure>
-
-<p>contentId：未设置时通name相等</p>
-<p><img src="/.%5C%E5%9B%BE%E7%89%87%5Ctypora%5Cimage-20230113173432411.png" alt="image-20230113173432411"></p>
-<p>对所有feign生效：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">feign:</span><br><span class="line">  client:</span><br><span class="line">    config:</span><br><span class="line">      default:</span><br><span class="line">        connectTimeout: 5000</span><br><span class="line">        readTimeout: 5000</span><br><span class="line">        loggerLevel: basic</span><br></pre></td></tr></table></figure>
-
-<p>默认配置文件优先于@Configuration， 你可以通过feign.client.default-to-properties设置false 改变优先级</p>
-<p>另外：如果需要在RequestInterceptor中使用ThreadLocal绑定变量，则需要将Hystrix的线程隔离策略设置为“SEMAPHORE”或在Feign中禁用Hystrix。</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"># To disable Hystrix in Feign</span><br><span class="line">feign:</span><br><span class="line">  hystrix:</span><br><span class="line">    enabled: false</span><br><span class="line"></span><br><span class="line"># To set thread isolation to SEMAPHORE</span><br><span class="line">hystrix:</span><br><span class="line">  command:</span><br><span class="line">    default:</span><br><span class="line">      execution:</span><br><span class="line">        isolation:</span><br><span class="line">          strategy: SEMAPHORE</span><br></pre></td></tr></table></figure>
-
-<p>   如果我们希望创建多个具有相同名称或url的外部客户端，以便它们指向相同的服务器，但每个客户端具有不同的自定义配置，那么我们必须使用@FeignClient的contextId属性，以避免这些配置bean的名称冲突。</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">@FeignClient(contextId = &quot;fooClient&quot;, name = &quot;stores&quot;, configuration = FooConfiguration.class)</span><br><span class="line">public interface FooClient &#123;</span><br><span class="line">    //..</span><br><span class="line">&#125;</span><br><span class="line">@FeignClient(contextId = &quot;barClient&quot;, name = &quot;stores&quot;, configuration = BarConfiguration.class)</span><br><span class="line">public interface BarClient &#123;</span><br><span class="line">    //..</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>Hystrix 存在于类路径上，并且 foreign.Hystrix.enabled&#x3D;true，支持熔断</p>
-<p>所有不支持hystrix ： 创建一个原型的Feign.Builder</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">@Configuration</span><br><span class="line">public class FooConfiguration &#123;</span><br><span class="line">        @Bean</span><br><span class="line">    @Scope(&quot;prototype&quot;)</span><br><span class="line">    public Feign.Builder feignBuilder() &#123;</span><br><span class="line">        return Feign.builder();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h2 id="1-2-日志级别"><a href="#1-2-日志级别" class="headerlink" title="1.2 日志级别"></a>1.2 日志级别</h2><p>配置类单独定义日志级别</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">@FeignClient(contextId = &quot;fooClient&quot;, name = &quot;stores&quot;, configuration = FooConfiguration.class)</span><br><span class="line">public interface FooClient &#123;</span><br><span class="line">    //..</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">public class FooConfiguration&#123;</span><br><span class="line"></span><br><span class="line">@Bean </span><br><span class="line">public Logger.Level  level()&#123;</span><br><span class="line">  return Logger.Level.FULL();</span><br><span class="line">&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p> 配置文件方式 （优先级高于代码配置）</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">@FeignClient(contentId=&quot;stores1&quot; name = &quot;stores&quot;)</span><br><span class="line">public interface FooClient &#123;</span><br><span class="line">    //..</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">feign:</span><br><span class="line">  client:</span><br><span class="line">    config:</span><br><span class="line">      stores1:</span><br><span class="line">        logLevel: full</span><br></pre></td></tr></table></figure>
-
-<h2 id="1-3-feign支持配置项"><a href="#1-3-feign支持配置项" class="headerlink" title="1.3 feign支持配置项"></a>1.3 feign支持配置项</h2><p>配置文件方式：</p>
-<p><img src="/.%5C%E5%9B%BE%E7%89%87%5Ctypora%5Cimage-20230116142927928.png" alt="image-20230116142927928"></p>
-<h1 id="2-ribbon"><a href="#2-ribbon" class="headerlink" title="2.ribbon"></a>2.ribbon</h1><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">@Configuration</span><br><span class="line">@RibbonClient(name = &quot;custom&quot;, configuration = CustomConfiguration.class)</span><br><span class="line">public class TestConfiguration &#123;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p><code>CustomConfiguration</code> 不需要用 <code>@Configuration</code> 注解修饰, 并且不能被@ComponentScan<code>在 application context 环境扫描到.否则 将被所有</code>@RibbonClients  共用，如果你用了<code>@ComponentScan</code> (or <code>@SpringBootApplication</code>),你需要把这个配置排除在外。</p>
-<p>默认ribbon配置：</p>
-<table>
-<thead>
-<tr>
-<th align="center">Bean Type</th>
-<th align="center">Bean Name</th>
-<th align="center">Class Name</th>
-</tr>
-</thead>
-<tbody><tr>
-<td align="center"><code>IClientConfig</code></td>
-<td align="center"><code>ribbonClientConfig</code></td>
-<td align="center"><code>DefaultClientConfigImpl</code></td>
-</tr>
-<tr>
-<td align="center"><code>IRule</code></td>
-<td align="center"><code>ribbonRule</code></td>
-<td align="center"><code>ZoneAvoidanceRule</code></td>
-</tr>
-<tr>
-<td align="center"><code>IPing</code></td>
-<td align="center"><code>ribbonPing</code></td>
-<td align="center"><code>DummyPing</code></td>
-</tr>
-<tr>
-<td align="center"><code>ServerList&lt;Server&gt;</code></td>
-<td align="center"><code>ribbonServerList</code></td>
-<td align="center"><code>ConfigurationBasedServerList</code></td>
-</tr>
-<tr>
-<td align="center"><code>ServerListFilter&lt;Server&gt;</code></td>
-<td align="center"><code>ribbonServerListFilter</code></td>
-<td align="center"><code>ZonePreferenceServerListFilter</code></td>
-</tr>
-<tr>
-<td align="center"><code>ILoadBalancer</code></td>
-<td align="center"><code>ribbonLoadBalancer</code></td>
-<td align="center"><code>ZoneAwareLoadBalancer</code></td>
-</tr>
-<tr>
-<td align="center"><code>ServerListUpdater</code></td>
-<td align="center"><code>ribbonServerListUpdater</code></td>
-<td align="center"><code>PollingServerListUpdater</code></td>
-</tr>
-</tbody></table>
-<h2 id="2-2-自定义默认全局配置"><a href="#2-2-自定义默认全局配置" class="headerlink" title="2.2 自定义默认全局配置"></a>2.2 自定义默认全局配置</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line">@RibbonClients(defaultConfiguration = DefaultRibbonConfig.class)</span><br><span class="line">public class RibbonClientDefaultConfigurationTestsConfig &#123;</span><br><span class="line"></span><br><span class="line">    public static class BazServiceList extends ConfigurationBasedServerList &#123;</span><br><span class="line"></span><br><span class="line">        public BazServiceList(IClientConfig config) &#123;</span><br><span class="line">            super.initWithNiwsConfig(config);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">@Configuration(proxyBeanMethods = false)</span><br><span class="line">class DefaultRibbonConfig &#123;</span><br><span class="line"></span><br><span class="line">    @Bean</span><br><span class="line">    public IRule ribbonRule() &#123;</span><br><span class="line">        return new BestAvailableRule();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Bean</span><br><span class="line">    public IPing ribbonPing() &#123;</span><br><span class="line">        return new PingUrl();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Bean</span><br><span class="line">    public ServerList&lt;Server&gt; ribbonServerList(IClientConfig config) &#123;</span><br><span class="line">        return new RibbonClientDefaultConfigurationTestsConfig.BazServiceList(config);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Bean</span><br><span class="line">    public ServerListSubsetFilter serverListFilter() &#123;</span><br><span class="line">        ServerListSubsetFilter filter = new ServerListSubsetFilter();</span><br><span class="line">        return filter;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h2 id="2-3-自定义client配置通过属性配置"><a href="#2-3-自定义client配置通过属性配置" class="headerlink" title="2.3 自定义client配置通过属性配置"></a>2.3 自定义client配置通过属性配置</h2><ul>
-<li><p><code>&lt;clientName&gt;.ribbon.NFLoadBalancerClassName</code>: Should implement <code>ILoadBalancer</code></p>
-</li>
-<li><p><code>&lt;clientName&gt;.ribbon.NFLoadBalancerRuleClassName</code>: Should implement <code>IRule</code></p>
-</li>
-<li><p><code>&lt;clientName&gt;.ribbon.NFLoadBalancerPingClassName</code>: Should implement <code>IPing</code></p>
-</li>
-<li><p><code>&lt;clientName&gt;.ribbon.NIWSServerListClassName</code>: Should implement <code>ServerList</code></p>
-</li>
-<li><p><code>&lt;clientName&gt;.ribbon.NIWSServerListFilterClassName</code>: Should implement <code>ServerListFilter</code></p>
-<p> 属性配置，优先于代码配置</p>
-</li>
-</ul>
-<h2 id="2-4-直接使用api"><a href="#2-4-直接使用api" class="headerlink" title="2.4 直接使用api"></a>2.4 直接使用api</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">public class MyClass &#123;</span><br><span class="line">    @Autowired</span><br><span class="line">    private LoadBalancerClient loadBalancer;</span><br><span class="line"></span><br><span class="line">    public void doStuff() &#123;</span><br><span class="line">        ServiceInstance instance = loadBalancer.choose(&quot;stores&quot;);</span><br><span class="line">        URI storesUri = URI.create(String.format(&quot;https://%s:%s&quot;, instance.getHost(), instance.getPort()));</span><br><span class="line">        // ... do something with the URI</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h2 id="2-5-缓存ribbon配置"><a href="#2-5-缓存ribbon配置" class="headerlink" title="2.5 缓存ribbon配置"></a>2.5 缓存ribbon配置</h2><p>​    每个Ribbon命名的客户端都有一个Spring Cloud维护的相应子应用程序上下文。该应用程序上下文在第一次请求命名客户端时被延迟加载。通过指定Ribbon客户端的名称，可以更改这种延迟加载行为，以在启动时急切地加载这些子应用程序上下文。</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">ribbon:</span><br><span class="line">  eager-load:</span><br><span class="line">    enabled: true</span><br><span class="line">    clients: client1, client2, client3</span><br></pre></td></tr></table></figure>
-
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://chenguanghua.github.io/2023/02/22/springboot/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="热心的蚂蚁">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="热心的蚂蚁的博客">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="undefined | 热心的蚂蚁的博客">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2023/02/22/springboot/" class="post-title-link" itemprop="url">未命名</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-
-      <time title="创建时间：2023-02-22 17:16:51" itemprop="dateCreated datePublished" datetime="2023-02-22T17:16:51+08:00">2023-02-22</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2023-02-10 17:39:09" itemprop="dateModified" datetime="2023-02-10T17:39:09+08:00">2023-02-10</time>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h2 id="1-自动装配原理"><a href="#1-自动装配原理" class="headerlink" title="1. 自动装配原理"></a>1. 自动装配原理</h2><p><img src="/.%5C%E5%9B%BE%E7%89%87%5Cspring%E8%87%AA%E5%8A%A8%E8%A3%85%E9%85%8D.png" alt="spring自动装配"></p>
-<h2 id="2-spring常见"><a href="#2-spring常见" class="headerlink" title="2.spring常见"></a>2.spring常见</h2><h3 id="1-bean实例化流程"><a href="#1-bean实例化流程" class="headerlink" title="1. bean实例化流程"></a>1. bean实例化流程</h3><p> 扫描class –&gt; BeanDefinition –&gt; 推断构造方法 –&gt; 实例化 –&gt; 原始对象 –&gt; 填充属性  –&gt; Aware相关接口处理 –&gt; BeanPostProcessor前置处理 –&gt; 初始化 –&gt; BeanPostProcessor后置处理 –&gt; (AOP –&gt; userService代理对象) –&gt; bean</p>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://chenguanghua.github.io/2023/02/22/spring/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="热心的蚂蚁">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="热心的蚂蚁的博客">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="undefined | 热心的蚂蚁的博客">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2023/02/22/spring/" class="post-title-link" itemprop="url">未命名</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-
-      <time title="创建时间：2023-02-22 17:16:51" itemprop="dateCreated datePublished" datetime="2023-02-22T17:16:51+08:00">2023-02-22</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2023-02-21 11:07:12" itemprop="dateModified" datetime="2023-02-21T11:07:12+08:00">2023-02-21</time>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h2 id="1-谈一谈spring-ioc理解？原理和实现"><a href="#1-谈一谈spring-ioc理解？原理和实现" class="headerlink" title="1. 谈一谈spring ioc理解？原理和实现"></a>1. 谈一谈spring ioc理解？原理和实现</h2><p>IOC ：控制反转， 对象一般都使用者创建，有了spring后把对象创建交给spring 容器.即</p>
-<p>容器来负责控制对象的生命周期和对象间的关系</p>
-<p>容器：存储对象，三级缓存 sigletionObjects ,earingsigletionObject ,sigletionFacotry</p>
-<h2 id="2-bean的生命周期"><a href="#2-bean的生命周期" class="headerlink" title="2.bean的生命周期"></a>2.bean的生命周期</h2><blockquote>
-<p> 创建实例-&gt;填充属性-&gt;初始化-&gt;使用-&gt;销毁</p>
-</blockquote>
-<ul>
-<li>加载解析bean为beanDefinition</li>
-<li>通过反射实例化具体对象 </li>
-<li>填充属性 ： populateBean(),循环依赖</li>
-<li>调用aware方法： 设置 BeanName ,BeanFactory </li>
-<li>初始化 调用BeanPostProcessor</li>
-</ul>
-<p><img src="/.%5C%E5%9B%BE%E7%89%87%5Cspring%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F.png" alt="spring生命周期"></p>
-<h2 id="3-Spring是如何解决的循环依赖？"><a href="#3-Spring是如何解决的循环依赖？" class="headerlink" title="3.Spring是如何解决的循环依赖？"></a>3.Spring是如何解决的循环依赖？</h2><p>   Spring通过三级缓存解决了循环依赖，其中一级缓存为单例池（singletonObjects）,二级缓存为早期曝光对象earlySingletonObjects，三级缓存为早期曝光对象工厂（singletonFactories）。当A、B两个类发生循环引用时，在A完成实例化后，就使用实例化后的对象去创建一个对象工厂，并添加到三级缓存中，如果A被AOP代理，那么通过这个工厂获取到的就是A代理后的对象，如果A没有被AOP代理，那么这个工厂获取到的就是A实例化的对象。当A进行属性注入时，会去创建B，同时B又依赖了A，所以创建B的同时又会去调用getBean(a)来获取需要的依赖，此时的getBean(a)会从缓存中获取，第一步，先获取到三级缓存中的工厂；第二步，调用对象工工厂的getObject方法来获取到对应的对象，得到这个对象后将其注入到B中。紧接着B会走完它的生命周期流程，包括初始化、后置处理器等。当B创建完后，会将B再注入到A中，此时A再完成它的整个生命周期。至此，循环依赖结束！</p>
-<h2 id="4-为什么要使用三级缓存呢？二级缓存能解决循环依赖吗？"><a href="#4-为什么要使用三级缓存呢？二级缓存能解决循环依赖吗？" class="headerlink" title="4.为什么要使用三级缓存呢？二级缓存能解决循环依赖吗？"></a>4.为什么要使用三级缓存呢？二级缓存能解决循环依赖吗？</h2><p>​    如果要使用二级缓存解决循环依赖，意味着所有Bean在实例化后就要完成AOP代理，这样违背了Spring设计的原则，Spring在设计之初就是通过AnnotationAwareAspectJAutoProxyCreator这个后置处理器来在Bean生命周期的最后一步来完成AOP代理，而不是在实例化后就立马进行AOP代</p>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://chenguanghua.github.io/2023/02/22/rocket%E4%BA%8B%E5%8A%A1%E6%B6%88%E6%81%AF/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="热心的蚂蚁">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="热心的蚂蚁的博客">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="undefined | 热心的蚂蚁的博客">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2023/02/22/rocket%E4%BA%8B%E5%8A%A1%E6%B6%88%E6%81%AF/" class="post-title-link" itemprop="url">未命名</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-
-      <time title="创建时间：2023-02-22 17:16:51" itemprop="dateCreated datePublished" datetime="2023-02-22T17:16:51+08:00">2023-02-22</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2023-02-02 10:20:37" itemprop="dateModified" datetime="2023-02-02T10:20:37+08:00">2023-02-02</time>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h3 id="1-流程"><a href="#1-流程" class="headerlink" title="1.流程"></a>1.流程</h3><p>RocketMQ 4.3 开始支持事务</p>
-<p><strong>(1)、正常事务消息的发送及提交</strong><br>a、生产者发送half消息到Broker服务端（半消息）；</p>
-<p>半消息是一种特殊的消息类型，该状态的消息暂时不能被Consumer消费。当一条事务消息被成功投递到Broker上，但是Broker并没有接收到Producer发出的二次确认时，该事务消息就处于”暂时不可被消费”状态，该状态的事务消息被称为半消息。</p>
-<p>b、Broker服务端将消息持久化之后，给生产者响应消息写入结果（ACK响应）；</p>
-<p>c、生产者根据发送结果执行本地事务逻辑（如果写入失败，此时half消息对业务不可见，本地逻辑不执行）；</p>
-<p>d、生产者根据本地事务执行结果向Broker服务端提交二次确认（Commit 或是 Rollback），Broker服务端收到 Commit 状态则将半事务消息标记为可投递，订阅方最终将收到该消息；Broker服务端收到 Rollback 状态则删除半事务消息，订阅方将不会接收该消息；</p>
-<p><strong>(2)、事务消息的补偿流程</strong><br>a、在网络闪断或者是应用重启的情况下，可能导致生产者发送的二次确认消息未能到达Broker服务端，经过固定时间后，Broker服务端将会对没有Commit&#x2F;Rollback的事务消息（pending状态的消息）进行“回查”；</p>
-<p>b、生产者收到回查消息后，检查回查消息对应的本地事务执行的最终结果；</p>
-<p>c、生产者根据本地事务状态，再次提交二次确认给Broker，然后Broker重新对半事务消息Commit或者Rollback；</p>
-<p>其中，补偿阶段用于解决消息Commit或者Rollback发生超时或者失败的情况。</p>
-<p>事务消息共有三种状态，提交状态、回滚状态、中间状态：</p>
-<ul>
-<li><p>TransactionStatus.CommitTransaction：提交事务，它允许消费者消费此消息。</p>
-</li>
-<li><p>TransactionStatus.RollbackTransaction：回滚事务，它代表该消息将被删除，不允许被消费</p>
-</li>
-</ul>
-<ul>
-<li>TransactionStatus.Unknown：中间状态，它代表需要回查本地事务状态来决定是提交还是回滚事务。</li>
-</ul>
-<h3 id="2-事例"><a href="#2-事例" class="headerlink" title="2.事例"></a>2.事例</h3><h4 id="创建生产者"><a href="#创建生产者" class="headerlink" title="创建生产者"></a>创建生产者</h4><p>使用 <code>TransactionMQProducer</code>类创建生产者，并指定唯一的 <code>ProducerGroup</code>，就可以设置自定义线程池来处理这些检查请求。执行本地事务后、需要根据执行结果对消息队列进行回复</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line">mport org.apache.rocketmq.client.consumer.DefaultMQPushConsumer;</span><br><span class="line">import org.apache.rocketmq.client.consumer.listener.ConsumeConcurrentlyContext;</span><br><span class="line">import org.apache.rocketmq.client.consumer.listener.ConsumeConcurrentlyStatus;</span><br><span class="line">import org.apache.rocketmq.client.consumer.listener.MessageListenerConcurrently;</span><br><span class="line">import org.apache.rocketmq.common.message.MessageExt;</span><br><span class="line">import java.util.List;</span><br><span class="line">public class TransactionProducer &#123;</span><br><span class="line">   public static void main(String[] args) throws MQClientException, InterruptedException &#123;</span><br><span class="line">       TransactionListener transactionListener = new TransactionListenerImpl();</span><br><span class="line">       TransactionMQProducer producer = new TransactionMQProducer(&quot;please_rename_unique_group_name&quot;);</span><br><span class="line">       ExecutorService executorService = new ThreadPoolExecutor(2, 5, 100, TimeUnit.SECONDS, new ArrayBlockingQueue&lt;Runnable&gt;(2000), new ThreadFactory() &#123;</span><br><span class="line">           @Override</span><br><span class="line">           public Thread newThread(Runnable r) &#123;</span><br><span class="line">               Thread thread = new Thread(r);</span><br><span class="line">               thread.setName(&quot;client-transaction-msg-check-thread&quot;);</span><br><span class="line">               return thread;</span><br><span class="line">           &#125;</span><br><span class="line">       &#125;);</span><br><span class="line">       producer.setExecutorService(executorService);</span><br><span class="line">       producer.setTransactionListener(transactionListener);</span><br><span class="line">       producer.start();</span><br><span class="line">       String[] tags = new String[] &#123;&quot;TagA&quot;, &quot;TagB&quot;, &quot;TagC&quot;, &quot;TagD&quot;, &quot;TagE&quot;&#125;;</span><br><span class="line">       for (int i = 0; i &lt; 10; i++) &#123;</span><br><span class="line">           try &#123;</span><br><span class="line">               Message msg =</span><br><span class="line">                   new Message(&quot;TopicTest1234&quot;, tags[i % tags.length], &quot;KEY&quot; + i,</span><br><span class="line">                       (&quot;Hello RocketMQ &quot; + i).getBytes(RemotingHelper.DEFAULT_CHARSET));</span><br><span class="line">               SendResult sendResult = producer.sendMessageInTransaction(msg, null);</span><br><span class="line">               System.out.printf(&quot;%s%n&quot;, sendResult);</span><br><span class="line">               Thread.sleep(10);</span><br><span class="line">           &#125; catch (MQClientException | UnsupportedEncodingException e) &#123;</span><br><span class="line">               e.printStackTrace();</span><br><span class="line">           &#125;</span><br><span class="line">       &#125;</span><br><span class="line">       for (int i = 0; i &lt; 100000; i++) &#123;</span><br><span class="line">           Thread.sleep(1000);</span><br><span class="line">       &#125;</span><br><span class="line">       producer.shutdown();</span><br><span class="line">   &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h4 id="实现事务的监听接口"><a href="#实现事务的监听接口" class="headerlink" title="实现事务的监听接口"></a>实现事务的监听接口</h4><p>当发送半消息成功时，我们使用 <code>executeLocalTransaction</code> 方法来执行本地事务。它返回前一节中提到的三个事务状态之一。<code>checkLocalTransaction</code> 方法用于检查本地事务状态，并回应消息队列的检查请求</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line">public class TransactionListenerImpl implements TransactionListener &#123;</span><br><span class="line">  private AtomicInteger transactionIndex = new AtomicInteger(0);</span><br><span class="line">  private ConcurrentHashMap&lt;String, Integer&gt; localTrans = new ConcurrentHashMap&lt;&gt;();</span><br><span class="line">  </span><br><span class="line">  /***</span><br><span class="line">  *** 执行成功half消息，执行本地事务</span><br><span class="line">  ****/</span><br><span class="line">  @Override</span><br><span class="line">  public LocalTransactionState executeLocalTransaction(Message msg, Object arg) &#123;</span><br><span class="line">      int value = transactionIndex.getAndIncrement();</span><br><span class="line">      int status = value % 3;</span><br><span class="line">      localTrans.put(msg.getTransactionId(), status);</span><br><span class="line">      return LocalTransactionState.UNKNOW;</span><br><span class="line">  &#125;</span><br><span class="line">  /****</span><br><span class="line">  **** 会查本地消息状态</span><br><span class="line">  ****/</span><br><span class="line">  @Override</span><br><span class="line">  public LocalTransactionState checkLocalTransaction(MessageExt msg) &#123;</span><br><span class="line">      Integer status = localTrans.get(msg.getTransactionId());</span><br><span class="line">      if (null != status) &#123;</span><br><span class="line">          switch (status) &#123;</span><br><span class="line">              case 0:</span><br><span class="line">                  return LocalTransactionState.UNKNOW;</span><br><span class="line">              case 1:</span><br><span class="line">                  return LocalTransactionState.COMMIT_MESSAGE;</span><br><span class="line">              case 2:</span><br><span class="line">                  return LocalTransactionState.ROLLBACK_MESSAGE;</span><br><span class="line">          &#125;</span><br><span class="line">      &#125;</span><br><span class="line">      return LocalTransactionState.COMMIT_MESSAGE;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h3 id="3-原理"><a href="#3-原理" class="headerlink" title="3.原理"></a>3.原理</h3><p>​     在RocketMQ事务消息的主要流程中，一阶段的消息如何对用户不可见。其中，事务消息相对普通消息最大的特点就是一阶段发送的消息对用户是不可见的。那么，如何做到写入消息但是对用户不可见呢？RocketMQ事务消息的做法是：如果消息是half消息，将备份原消息的主题与消息消费队列，然后改变主题为<code>RMQ_SYS_TRANS_HALF_TOPIC</code>。由于消费组未订阅该主题，故消费端无法消费half类型的消息。</p>
-<ul>
-<li>如何实现事务回查？</li>
-</ul>
-<p>​       roker会启动一个消息回查的定时任务，定时从事务消息queue中读取所有待反查的消息。针对每个需要反查的半消息，Broker会给对应的Producer发一个要求执行事务状态反查的RPC请求。然后根据RPC返回响应中的反查结果，来决定这个半消息是需要提交还是回滚，或者后续继续来反查。最后，提交或者回滚事务，将半消息标记为已处理状态【将消息存储在主题为：RMQ_SYS_TRANS_OP_HALF_TOPIC的主题中，代表这些消息已经被处理（提交或回滚）】。 如果是提交事务，就把半消息从半消息队列中复制到该消息真正的topic和queue中； 如果是回滚事务，则什么都不做。</p>
-<h3 id="4-事务消息使用上的限制"><a href="#4-事务消息使用上的限制" class="headerlink" title="4. 事务消息使用上的限制"></a>4. 事务消息使用上的限制</h3><ol>
-<li>事务消息不支持延时消息和批量消息。</li>
-<li>为了避免单个消息被检查太多次而导致半队列消息累积，我们默认将单个消息的检查次数限制为 15 次，但是用户可以通过 Broker 配置文件的 <code>transactionCheckMax</code>参数来修改此限制。如果已经检查某条消息超过 N 次的话（ N &#x3D; <code>transactionCheckMax</code> ） 则 Broker 将丢弃此消息，并在默认情况下同时打印错误日志。用户可以通过重写 <code>AbstractTransactionalMessageCheckListener</code> 类来修改这个行为。</li>
-<li>事务消息将在 Broker 配置文件中的参数 transactionTimeout 这样的特定时间长度之后被检查。当发送事务消息时，用户还可以通过设置用户属性 CHECK_IMMUNITY_TIME_IN_SECONDS 来改变这个限制，该参数优先于 <code>transactionTimeout</code> 参数。</li>
-<li>事务性消息可能不止一次被检查或消费。</li>
-<li>提交给用户的目标主题消息可能会失败，目前这依日志的记录而定。它的高可用性通过 RocketMQ 本身的高可用性机制来保证，如果希望确保事务消息不丢失、并且事务完整性得到保证，建议使用同步的双重写入机制。</li>
-<li>事务消息的生产者 ID 不能与其他类型消息的生产者 ID 共享。与其他类型的消息不同，事务消息允许反向查询、MQ服务器能通过它们的生产者 ID 查询到消费者。</li>
-</ol>
-<p>参考 ： <a target="_blank" rel="noopener" href="https://github.com/apache/rocketmq/blob/master/docs/cn/RocketMQ_Example.md#1%E5%88%9B%E5%BB%BA%E4%BA%8B%E5%8A%A1%E6%80%A7%E7%94%9F%E4%BA%A7%E8%80%85">rocket官方连接</a><a target="_blank" rel="noopener" href="https://github.com/apache/rocketmq/blob/master/docs/cn/RocketMQ_Example.md#1%E5%88%9B%E5%BB%BA%E4%BA%8B%E5%8A%A1%E6%80%A7%E7%94%9F%E4%BA%A7%E8%80%85">https://github.com/apache/rocketmq/blob/master/docs/cn/RocketMQ_Example.md#1%E5%88%9B%E5%BB%BA%E4%BA%8B%E5%8A%A1%E6%80%A7%E7%94%9F%E4%BA%A7%E8%80%85</a></p>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
     <link itemprop="mainEntityOfPage" href="https://chenguanghua.github.io/2023/02/22/redis/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1103,7 +545,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://chenguanghua.github.io/2023/02/22/oauth2/">
+    <link itemprop="mainEntityOfPage" href="https://chenguanghua.github.io/2023/02/22/jvm/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -1121,7 +563,7 @@
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/2023/02/22/oauth2/" class="post-title-link" itemprop="url">未命名</a>
+          <a href="/2023/02/22/jvm/" class="post-title-link" itemprop="url">未命名</a>
         </h2>
 
         <div class="post-meta-container">
@@ -1139,7 +581,7 @@
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2023-02-09 15:36:25" itemprop="dateModified" datetime="2023-02-09T15:36:25+08:00">2023-02-09</time>
+      <time title="修改时间：2023-02-14 15:00:21" itemprop="dateModified" datetime="2023-02-14T15:00:21+08:00">2023-02-14</time>
     </span>
 
   
@@ -1152,20 +594,549 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <h2 id="1-角色"><a href="#1-角色" class="headerlink" title="1.  角色"></a>1.  角色</h2><ul>
-<li><p><strong>Resource Owner :资源拥有者</strong></p>
+          <h2 id="1-工具"><a href="#1-工具" class="headerlink" title="1.工具"></a>1.工具</h2><ul>
+<li><p>jps</p>
 </li>
-<li><h5 id="Resource-Server-资源服务器"><a href="#Resource-Server-资源服务器" class="headerlink" title="Resource Server 资源服务器"></a>Resource Server 资源服务器</h5></li>
-<li><p><strong>Client 客户端</strong></p>
+<li><p>jinfo ： 查看配置</p>
 </li>
-<li><h5 id="Authorization-server-授权服务器"><a href="#Authorization-server-授权服务器" class="headerlink" title="Authorization server 授权服务器"></a>Authorization server 授权服务器</h5></li>
-</ul>
-<h2 id="2-大致流程"><a href="#2-大致流程" class="headerlink" title="2  大致流程"></a>2  大致流程</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">+--------+                               +---------------+</span><br><span class="line">    |        |--(A)- Authorization Request -&gt;|   Resource    |</span><br><span class="line">    |        |                               |     Owner     |</span><br><span class="line">    |        |&lt;-(B)-- Authorization Grant ---|               |</span><br><span class="line">    |        |                               +---------------+</span><br><span class="line">    |        |</span><br><span class="line">    |        |                               +---------------+</span><br><span class="line">    |        |--(C)-- Authorization Grant --&gt;| Authorization |</span><br><span class="line">    | Client |                               |     Server    |</span><br><span class="line">    |        |&lt;-(D)----- Access Token -------|               |</span><br><span class="line">    |        |                               +---------------+</span><br><span class="line">    |        |</span><br><span class="line">    |        |                               +---------------+</span><br><span class="line">    |        |--(E)----- Access Token ------&gt;|    Resource   |</span><br><span class="line">    |        |                               |     Server    |</span><br><span class="line">    |        |&lt;-(F)--- Protected Resource ---|               |</span><br><span class="line">    +--------+                               +---------------+</span><br></pre></td></tr></table></figure>
-
-<h2 id="3-具体实现方式"><a href="#3-具体实现方式" class="headerlink" title="3 . 具体实现方式"></a>3 . 具体实现方式</h2><h3 id="3-1-授权码模式"><a href="#3-1-授权码模式" class="headerlink" title="3.1  授权码模式"></a>3.1  授权码模式</h3><blockquote>
-<p>授权码授予类型是一种安全的方式来获取访问令牌和刷新令牌。它涉及客户端将用户重定向到授权服务器，用户可以授予客户端访问其资源的权限。然后，授权服务器将授权码发送回客户端，可以用来兑换访问令牌。然后，可以使用访问令牌来访问用户的资源。</p>
+<li><p>jvisualvm</p>
+</li>
+<li><p>jconsole</p>
+<h3 id="1-1-jmap"><a href="#1-1-jmap" class="headerlink" title="1.1 jmap"></a>1.1 jmap</h3><blockquote>
+<p> jmap [options] pid</p>
 </blockquote>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">+----------+</span><br><span class="line">     | Resource |</span><br><span class="line">     |   Owner  |</span><br><span class="line">     |          |</span><br><span class="line">     +----------+</span><br><span class="line">          ^</span><br><span class="line">          |</span><br><span class="line">         (B)</span><br><span class="line">     +----|-----+          Client Identifier      +---------------+</span><br><span class="line">     |         -+----(A)-- &amp; Redirection URI ----&gt;|               |</span><br><span class="line">     |  User-   |                                 | Authorization |</span><br><span class="line">     |  Agent  -+----(B)-- User authenticates ---&gt;|     Server    |</span><br><span class="line">     |          |                                 |               |</span><br><span class="line">     |         -+----(C)-- Authorization Code ---&lt;|               |</span><br><span class="line">     +-|----|---+                                 +---------------+</span><br><span class="line">       |    |                                         ^      v</span><br><span class="line">      (A)  (C)                                        |      |</span><br><span class="line">       |    |                                         |      |</span><br><span class="line">       ^    v                                         |      |</span><br><span class="line">     +---------+                                      |      |</span><br><span class="line">     |         |&gt;---(D)-- Authorization Code ---------<span class="string">&#x27;      |</span></span><br><span class="line"><span class="string">     |  Client |          &amp; Redirection URI                  |</span></span><br><span class="line"><span class="string">     |         |                                             |</span></span><br><span class="line"><span class="string">     |         |&lt;---(E)----- Access Token -------------------&#x27;</span></span><br><span class="line">     +---------+       (w/ Optional Refresh Token)</span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">&lt;none&gt;               to print same info as Solaris pmap</span><br><span class="line">    -heap                to print java heap summary</span><br><span class="line">    -histo[:live]        to print histogram of java object heap; if the &quot;live&quot;</span><br><span class="line">                         suboption is specified, only count live objects</span><br><span class="line">    -clstats             to print class loader statistics</span><br><span class="line">    -finalizerinfo       to print information on objects awaiting finalization</span><br><span class="line">    -dump:&lt;dump-options&gt; to dump java heap in hprof binary format</span><br><span class="line">                         dump-options:</span><br><span class="line">                           live         dump only live objects; if not specified,</span><br><span class="line">                                        all objects in the heap are dumped.</span><br><span class="line">                           format=b     binary format</span><br><span class="line">                           file=&lt;file&gt;  dump heap to &lt;file&gt;</span><br><span class="line">                         Example: jmap -dump:live,format=b,file=heap.bin &lt;pid&gt;</span><br><span class="line">    -F                   force. Use with -dump:&lt;dump-options&gt; &lt;pid&gt; or -histo</span><br><span class="line">                         to force a heap dump or histogram when &lt;pid&gt; does not</span><br><span class="line">                         respond. The &quot;live&quot; suboption is not supported</span><br><span class="line">                         in this mode.</span><br><span class="line">    -h | -help           to print this help message</span><br><span class="line">    -J&lt;flag&gt;             to pass &lt;flag&gt; directly to the runtime system</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="1-2-jstack"><a href="#1-2-jstack" class="headerlink" title="1.2 jstack"></a>1.2 jstack</h3><h3 id="1-3-jmap"><a href="#1-3-jmap" class="headerlink" title="1.3 jmap"></a>1.3 jmap</h3></li>
+</ul>
+<h2 id="2-垃圾回收"><a href="#2-垃圾回收" class="headerlink" title="2. 垃圾回收"></a>2. 垃圾回收</h2><p>我们进行MinorGC，会不会有对象被老年代引用着？进行OldGC会不会又有对象被年轻代引用着？</p>
+<p>那我们进行MinorGC的时候不光要管GC Roots，还有再去遍历老年代，这个性能问题就很大了。</p>
+<p>解决方案： </p>
+<p><strong>跨代引用相对于同代引用来说仅占极少数</strong>。</p>
+<p>由此就产生了一个新的解决方案，我们不用去扫描整个老年代了，只要在年轻代建立一个数据结构，叫做记忆集Remembered Set，他把老年代划分为N个区域，标志出哪个区域会存在跨代引用。以后在进行MinorGC的时候，只要把这些包含了跨代引用的内存区域加入GC Roots一起扫描就行了。</p>
+<p>卡表实际上就是记忆集的一种实现方式，如果说记忆集是接口的话，那么卡表就是他的实现类。</p>
+<p>实际上卡表就是映射了一块块的内存地址，这些内存地址块称为<strong>卡页</strong></p>
+<p>只要一个卡页内的对象存在一个或者多个跨代对象指针，就将该位置的卡表数组元素修改为1，表示这个位置为脏，没有则为0。</p>
+<p>在GC的时候，就直接把值为1对应的卡页对象指针加入GC Roots一起扫描即可。</p>
+<p><strong>三色标记</strong></p>
+<ol>
+<li>白色，在刚开始遍历的时候，所有的对象都是白色的</li>
+<li>灰色，被垃圾回收器扫描过，但是至少还有一个引用没有被扫描</li>
+<li>黑色，被垃圾回收器扫描过，并且这个对象的引用也全部都被扫描过，是安全存活的对象</li>
+</ol>
+<p><strong>三色标记的问题</strong></p>
+<p>存活对象标记成需要清理，同时满足一下两种场景才会出现</p>
+<ol>
+<li>插入了一条或者多条黑色到白色对象的引用</li>
+<li>删除了全部从灰色到白色对象的引用</li>
+</ol>
+<p>决绝方案：</p>
+<p> <strong>增量更新</strong>和<strong>原始快照</strong> ： CMS使用的是增量更新，而像G1则是使用原始快照</p>
+<p> 增量更新解决方案就是，他会把这些新插入的引用记录下来，扫描结束之后，再以黑色对象为根重新扫描一次。</p>
+<p> 原始快照则是去破坏第二个条件，他把这个要删除的引用记录下来，扫描结束之后，以灰色对象为根重新扫描一次。所以就像是快照一样，不管你删没删，其实最终还是会按照之前的关系重新来一次</p>
+<p><strong>G1使用场景</strong>：</p>
+<p>1、50%以上的堆被存活对象占用：当大多数对象都存活的时候，说明老年代被占用的比例也会很大，这个时候就会触发full gc，full gc是很慢的，如果我们使用G1，那么G1就会触发mixed gc，而且mixed gc的GC最大停顿时间还是可控的。<br>2、对象分配和晋升的速度变化非常大：说明了对象往老年代挪动的频率很频繁，一样的，可以减少full gc的发生。<br>3、垃圾回收时间特别长，超过1秒：可以设置停顿时间，提升用户体验。<br>4、8GB以上的堆内存(建议值)：内存如果在8G以下，收集的垃圾不是很多，而G1的算法相对于CMS较为复杂，还很有可能效率不如CMS，但是对于大内存，STW时间比较长，所以，在可控停顿时间这里，G1比较合适。<br>5、停顿时间是500ms以内：停顿时间可由用户控制。</p>
+<p><strong>为什么CMS用增量更新，G1用原始快照（SATB）</strong></p>
+<ol>
+<li>因为增量更新之后会重新深度扫描，G1是以region的方式存储对象，而CMS是以一个连续的老年代存储对象，G1会涉及到跨代扫描，G1的代价相对于CMS要高。</li>
+<li>而且G1较CMS更强调用户体验，重新深度扫描会加大STW时间，所以G1选择原始快照。</li>
+</ol>
+<h2 id="3-调优"><a href="#3-调优" class="headerlink" title="3.调优"></a>3.调优</h2><h3 id="3-1-JVM调优的时机"><a href="#3-1-JVM调优的时机" class="headerlink" title="3.1  JVM调优的时机"></a>3.1  JVM调优的时机</h3><ul>
+<li>Heap内存（老年代）持续上涨达到设置的最大内存值；</li>
+<li>Full GC 次数频繁；</li>
+<li>GC 停顿时间过长（超过1秒）；</li>
+<li>应用出现OutOfMemory 等内存异常；</li>
+<li>应用中有使用本地缓存且占用大量内存空间；</li>
+<li>系统吞吐量与响应性能不高或下降。</li>
+</ul>
+<h3 id="3-2-JVM调优的目标"><a href="#3-2-JVM调优的目标" class="headerlink" title="3.2  JVM调优的目标"></a>3.2  <strong>JVM调优的目标</strong></h3><ul>
+<li>延迟：GC低停顿和GC低频率；</li>
+<li>低内存占用；</li>
+<li>高吞吐量;</li>
+</ul>
+<h3 id="2-3-JVM调优的步骤"><a href="#2-3-JVM调优的步骤" class="headerlink" title="2.3 JVM调优的步骤"></a>2.3 <strong>JVM调优的步骤</strong></h3><ul>
+<li>分析系统系统运行情况：分析GC日志及dump文件，判断是否需要优化，确定瓶颈问题点；</li>
+<li>确定JVM调优量化目标；</li>
+<li>确定JVM调优参数（根据历史JVM参数来调整）；</li>
+<li>依次确定调优内存、延迟、吞吐量等指标；</li>
+<li>对比观察调优前后的差异；</li>
+<li>不断的分析和调整，直到找到合适的JVM参数配置；</li>
+<li>找到最合适的参数，将这些参数应用到所有服务器，并进行后续跟踪。</li>
+</ul>
+<h2 id="4-问题"><a href="#4-问题" class="headerlink" title="4.问题"></a>4.问题</h2><h3 id="4-1-为什么用元空间替代永久代"><a href="#4-1-为什么用元空间替代永久代" class="headerlink" title="4.1 为什么用元空间替代永久代?"></a>4.1 为什么用元空间替代永久代?</h3><ul>
+<li>降低OOM</li>
+<li>降低维护成本，元空间采取本地内存，不需要单独调优参数</li>
+</ul>
+<p>​     永久代和元空间都是 HotSpot 虚拟机对《Java 虚拟机规范》中方法区的实现，在 JDK 1.8 之前 HotSpot 是使用永久代来实现方法区的，但这样会导致 JVM 调优比较困难，且容易发生 OOM 的问题，而 JDK 1.8 及之后，使用的是元空间存放在本地内存中的方式来替代永久代的，这样就降低了 OOM 发生的可能性，也是 JRockit 和 HotSpot 融合之后的改动之一。</p>
+<ol>
+<li>JDK 1.6 及之前：方法区使用永久代实现，<strong>静态变量存放在永久代</strong>；</li>
+<li>JDK 1.7 ：“去永久代”的前置版本，还存在永久代，不过<strong>已经将字符串常量池和静态变量从永久代移到了堆上</strong>；</li>
+<li>JDK 1.8 及以后：<strong>无永久代，使用元空间（存放在本地内存中）实现方法区，常量保存在元空间，但字符串常量池和静态变量依然保存在堆中</strong>。</li>
+</ol>
+<h3 id="4-2-CMS"><a href="#4-2-CMS" class="headerlink" title="4.2 CMS"></a>4.2 CMS</h3><ul>
+<li>初始标记</li>
+<li>并发标记</li>
+<li>重新标记</li>
+<li>并发清除</li>
+</ul>
+<p>CMS缺点：</p>
+<p>   吞吐量低，<strong>对 CPU 资源消耗较大</strong> ,无法处理浮动垃圾(漏标+并发清除阶段产生)，采用标记清除算法产生内存碎片，并发模式失败后切换 seria old</p>
+<h2 id="5-G1-垃圾回收器"><a href="#5-G1-垃圾回收器" class="headerlink" title="5.G1 垃圾回收器"></a>5.G1 垃圾回收器</h2><p><strong>第一种：年轻代垃圾回收 YoungGC</strong></p>
+<p>YoungGC并不是说现有的Eden区放满了就会马上触发，G1会计算下现在Eden区回收大概要多久时间，如果回收时间远远小于参数 -XX:MaxGCPauseMills 设定的值，那么增加年轻代的region，继续给新对象存放，不会马上做Young GC，直到下一次Eden区放满，G1计算回收时间接近参数 -XX:MaxGCPauseMills 设定的值，那么就会触发Young GC。</p>
+<p><strong>第二种，混合垃圾回收，MixedGC</strong></p>
+<p>不是FullGC，老年代的堆占有率达到设定的值则触发，回收所有的Young和部分Old(根据期望的GC停顿时间确定old区垃圾收集的优先顺序)以及<strong>大对象区</strong>，正常情况G1的垃圾收集是先做MixedGC，主要使用复制算法，需要把各个region中存活的对象拷贝到别的region里去，拷贝过程中如果发现<strong>没有足够的空region</strong>能够承载拷贝对象就会触发一次Full GC。</p>
+<p><strong>第三种，Full GC</strong></p>
+<p>停止系统程序，然后采用单线程进行标记、清理和压缩整理，好空闲出来一批Region来供下一次MixedGC使用，这个过程是非常耗时的。(Shenandoah优化成多线程收集了</p>
+<h3 id="4-1-G1垃圾收集器优化建议"><a href="#4-1-G1垃圾收集器优化建议" class="headerlink" title="4.1 G1垃圾收集器优化建议"></a>4.1 <strong>G1垃圾收集器优化建议</strong></h3><p>   调优  -XX:MaxGCPauseMills 时间，避免频繁youngGC 和 大量对象快速进入老年代。</p>
+<h2 id="5-实际使用jvm调优配置参考"><a href="#5-实际使用jvm调优配置参考" class="headerlink" title="5.实际使用jvm调优配置参考"></a>5.实际使用jvm调优配置参考</h2><p><strong>2.1 通用型:</strong></p>
+<p>开发(模板4)+测试(模板4)+预发(模板2)+生产(模板2)</p>
+<p><strong>2.2 并发型:</strong></p>
+<p>开发(模板3)+测试(模板3)+预发(模板1)+生产(模板1)</p>
+<p><strong>2.3 IO密集型(测试中,如需配置请联系架构师评估):</strong></p>
+<p>开发(模板3)+测试(模板3)+预发(模板5)+生产(模板5)</p>
+<p><strong>3 ParNew+CMS垃圾回收器模板</strong></p>
+<p><strong>模板1:Pod:CPU request:256m limit:2048m;内存 request:3584M limit 4096M ;弹性伸缩 CPU:480%</strong></p>
+<p>-Xms2560M -Xmx2560M -Xmn1920M -XX:MetaspaceSize&#x3D;256M -XX:MaxMetaspaceSize&#x3D;256M -XX:+UseParNewGC -XX:+UseConcMarkSweepGC -XX:CMSInitiatingOccupancyFraction&#x3D;92 -XX:+CMSScavengeBeforeRemark</p>
+<p><strong>模板2:Pod:CPU request:256m limit:1024m;内存 request:1536M limit 2048M;弹性伸缩 CPU:240%(常规配置,limit*0.6的位置弹性)</strong></p>
+<p>-Xms1024M -Xmx1024M -Xmn768M -XX:MetaspaceSize&#x3D;256M -XX:MaxMetaspaceSize&#x3D;256M -XX:+UseParNewGC -XX:+UseConcMarkSweepGC -XX:CMSInitiatingOccupancyFraction&#x3D;92 -XX:+CMSScavengeBeforeRemark</p>
+<p><strong>模板3:Pod:CPU request:128m limit:512m;内存 request:768M limit 1024M;弹性伸缩 CPU:240%</strong></p>
+<p>-Xms448M -Xmx448M -Xmn336M -XX:SurvivorRatio&#x3D;4 -XX:MetaspaceSize&#x3D;256M -XX:MaxMetaspaceSize&#x3D;256M -XX:+UseParNewGC -XX:+UseConcMarkSweepGC -XX:CMSInitiatingOccupancyFraction&#x3D;92 -XX:+CMSScavengeBeforeRemark</p>
+<p><strong>模板4:Pod:CPU request:128m limit:512m;内存 request:640M limit 1024M;弹性伸缩 CPU:240%</strong></p>
+<p>-Xms384M -Xmx384M -Xmn288M -XX:SurvivorRatio&#x3D;4 -XX:MetaspaceSize&#x3D;256M -XX:MaxMetaspaceSize&#x3D;256M -XX:+UseParNewGC -XX:+UseConcMarkSweepGC -XX:CMSInitiatingOccupancyFraction&#x3D;92 -XX:+CMSScavengeBeforeRemark</p>
+<p><strong>模板5:Pod:CPU request:1024m limit:4096m;内存 request:6144M limit 8192M;弹性伸缩 CPU:240%</strong></p>
+<p>-Xms6144M -Xmx6144M -Xmn4608M -XX:MetaspaceSize&#x3D;256M -XX:MaxMetaspaceSize&#x3D;256M -XX:+UseParNewGC -XX:+UseConcMarkSweepGC -XX:CMSInitiatingOccupancyFraction&#x3D;92 -XX:+CMSScavengeBeforeRemark</p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://chenguanghua.github.io/2023/02/22/completaFuture/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="热心的蚂蚁">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="热心的蚂蚁的博客">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="undefined | 热心的蚂蚁的博客">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2023/02/22/completaFuture/" class="post-title-link" itemprop="url">completaFuture.md</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2023-02-22 17:16:51" itemprop="dateCreated datePublished" datetime="2023-02-22T17:16:51+08:00">2023-02-22</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2023-02-23 15:33:51" itemprop="dateModified" datetime="2023-02-23T15:33:51+08:00">2023-02-23</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/java/" itemprop="url" rel="index"><span itemprop="name">java</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <p>completaFuture 使用</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2023/02/22/completaFuture/">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://chenguanghua.github.io/2023/02/22/%E6%96%B9%E6%A1%88/%E7%A7%92%E6%9D%80/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="热心的蚂蚁">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="热心的蚂蚁的博客">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="undefined | 热心的蚂蚁的博客">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2023/02/22/%E6%96%B9%E6%A1%88/%E7%A7%92%E6%9D%80/" class="post-title-link" itemprop="url">未命名</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2023-02-22 17:16:49" itemprop="dateCreated datePublished" datetime="2023-02-22T17:16:49+08:00">2023-02-22</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2023-02-21 17:29:50" itemprop="dateModified" datetime="2023-02-21T17:29:50+08:00">2023-02-21</time>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h2 id="1-架构"><a href="#1-架构" class="headerlink" title="1.架构"></a>1.架构</h2><ul>
+<li>接入层，负载均衡： ngnix ：并发度10W+</li>
+<li>应用层 tomcat  ： 并发度800</li>
+<li>持久层 redis ：5万， mysql  1000</li>
+</ul>
+<h2 id="2-方案"><a href="#2-方案" class="headerlink" title="2. 方案"></a>2. 方案</h2><ul>
+<li><p>系统扩容</p>
+</li>
+<li><p>读写分离</p>
+</li>
+<li><p>多级缓存</p>
+</li>
+<li><p>异步解耦</p>
+</li>
+<li><p>流量防刷</p>
+</li>
+<li><p>资源控制</p>
+<img src="..\图片\秒杀-网络.png" alt="秒杀-网络" style="zoom:80%;" /></li>
+</ul>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://chenguanghua.github.io/2023/02/22/%E6%96%B9%E6%A1%88/%E5%88%86%E5%B8%83%E5%BC%8F%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="热心的蚂蚁">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="热心的蚂蚁的博客">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="undefined | 热心的蚂蚁的博客">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2023/02/22/%E6%96%B9%E6%A1%88/%E5%88%86%E5%B8%83%E5%BC%8F%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F/" class="post-title-link" itemprop="url">未命名</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2023-02-22 17:16:49" itemprop="dateCreated datePublished" datetime="2023-02-22T17:16:49+08:00">2023-02-22</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2023-02-20 14:29:07" itemprop="dateModified" datetime="2023-02-20T14:29:07+08:00">2023-02-20</time>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://chenguanghua.github.io/2023/02/22/%E6%96%B9%E6%A1%88/RPC/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="热心的蚂蚁">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="热心的蚂蚁的博客">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="undefined | 热心的蚂蚁的博客">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2023/02/22/%E6%96%B9%E6%A1%88/RPC/" class="post-title-link" itemprop="url">未命名</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2023-02-22 17:16:49" itemprop="dateCreated datePublished" datetime="2023-02-22T17:16:49+08:00">2023-02-22</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2023-02-17 16:20:29" itemprop="dateModified" datetime="2023-02-17T16:20:29+08:00">2023-02-17</time>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h2 id="1-RPC-基础结构"><a href="#1-RPC-基础结构" class="headerlink" title="1.RPC 基础结构"></a>1.<code>RPC</code> 基础结构</h2><ol>
+<li>Client</li>
+<li>Client-stub</li>
+<li><code>RPCRuntime</code></li>
+<li>Server-stub</li>
+<li>Server</li>
+</ol>
+<h2 id="2-RPC重要组成"><a href="#2-RPC重要组成" class="headerlink" title="2. RPC重要组成"></a>2. <code>RPC</code>重要组成</h2><h3 id="2-1-序列化"><a href="#2-1-序列化" class="headerlink" title="2.1 序列化"></a>2.1 序列化</h3><h3 id="2-2-网络传输"><a href="#2-2-网络传输" class="headerlink" title="2.2  网络传输"></a>2.2  网络传输</h3><h2 id="2-3-调用方式"><a href="#2-3-调用方式" class="headerlink" title="2.3 调用方式"></a>2.3 调用方式</h2><ul>
+<li>同步</li>
+<li>异步</li>
+</ul>
+<h3 id="2-4-服务治理"><a href="#2-4-服务治理" class="headerlink" title="2.4 服务治理"></a>2.4 服务治理</h3><ul>
+<li>负载均衡</li>
+<li>服务注册和发现</li>
+<li>高可用</li>
+</ul>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://chenguanghua.github.io/2023/02/22/%E4%BB%A3%E7%A0%81/%E5%BB%B6%E8%BF%9F%E9%98%9F%E5%88%97%E4%BB%A3%E7%A0%81/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="热心的蚂蚁">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="热心的蚂蚁的博客">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="undefined | 热心的蚂蚁的博客">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2023/02/22/%E4%BB%A3%E7%A0%81/%E5%BB%B6%E8%BF%9F%E9%98%9F%E5%88%97%E4%BB%A3%E7%A0%81/" class="post-title-link" itemprop="url">未命名</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2023-02-22 17:16:49" itemprop="dateCreated datePublished" datetime="2023-02-22T17:16:49+08:00">2023-02-22</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2023-02-15 11:11:45" itemprop="dateModified" datetime="2023-02-15T11:11:45+08:00">2023-02-15</time>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h2 id="1-redission-延迟消息"><a href="#1-redission-延迟消息" class="headerlink" title="1.redission 延迟消息"></a>1.redission 延迟消息</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">  <span class="comment">// 放消息</span></span><br><span class="line">  RQueue&lt;TipMessageDTO&gt; queue = redissonClient.getQueue(<span class="string">&quot;延迟消息队列常量&quot;</span>);</span><br><span class="line">  RDelayedQueue&lt;TipMessageDTO&gt; delayedQueue =redissonClient.getDelayedQueue(queue);</span><br><span class="line">  delayedQueue.offer(tipMessageDTO, delayMill, TimeUnit.MILLISECONDS);</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 取消息</span></span><br><span class="line">RBlockingQueue&lt;Object&gt; blockingFairQueue =redissonClient.getBlockingQueue(HEART_LOOP_OPT_DELAYED_QUEUE);</span><br><span class="line"> <span class="comment">// 应用启动时往队列里面放一个空值【如果不放数据,重启应用可能导致队列已有的数据消费不及时】</span></span><br><span class="line"> RDelayedQueue&lt;Object&gt; delayedQueue = redissonClient.getDelayedQueue(blockingFairQueue);</span><br><span class="line">        delayedQueue.offer(<span class="literal">null</span>, <span class="number">1</span>, TimeUnit.SECONDS);</span><br><span class="line">        <span class="keyword">while</span> (<span class="literal">true</span>) &#123;</span><br><span class="line">            <span class="keyword">try</span> &#123;</span><br><span class="line">                <span class="type">Object</span> <span class="variable">obj</span> <span class="operator">=</span> blockingFairQueue.take();</span><br><span class="line">                <span class="keyword">if</span> (Objects.nonNull(obj)) &#123;</span><br><span class="line">                    log.info(<span class="string">&quot;事件重试:&#123;&#125;&quot;</span>, obj);</span><br><span class="line">                    eventPublisher.publishEvent(obj);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">                log.warn(<span class="string">&quot;处理延迟队列失败&quot;</span>, e);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br></pre></td></tr></table></figure>
+
+
       
     </div>
 

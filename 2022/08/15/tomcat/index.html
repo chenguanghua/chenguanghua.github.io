@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 6.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="/lib/@fortawesome/fontawesome-free/css/all.min.css" integrity="sha256-Z1K5uhUaJXA7Ll0XrZ/0JhX4lAtZFpT6jkKrEDT0drU=" crossorigin="anonymous">
+  <link rel="stylesheet" href="/lib/animate.css/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"chenguanghua.github.io","root":"/","images":"/images","scheme":"Pisces","darkmode":false,"version":"8.14.2","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":{"enable":true,"style":"mac"},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="1.tomcat 架构 整体架构（1）Tomcat中只有一个Server，一个Server可以有多个Service，一个Service可以有多个Connector和一个Container；（2） Server掌管着整个Tomcat的生死大权；（4）Service 是对外提供服务的；（5）Connector用于接受请求并将请求封装成Request和Response来具体处理；（6）Container">
+<meta property="og:type" content="article">
+<meta property="og:title" content="tomcat架构">
+<meta property="og:url" content="https://chenguanghua.github.io/2022/08/15/tomcat/index.html">
+<meta property="og:site_name" content="热心的蚂蚁的博客">
+<meta property="og:description" content="1.tomcat 架构 整体架构（1）Tomcat中只有一个Server，一个Server可以有多个Service，一个Service可以有多个Connector和一个Container；（2） Server掌管着整个Tomcat的生死大权；（4）Service 是对外提供服务的；（5）Connector用于接受请求并将请求封装成Request和Response来具体处理；（6）Container">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://chenguanghua.github.io/.%5Ctomcat%5Ctomcat.svg">
+<meta property="og:image" content="https://chenguanghua.github.io/.%5Ctomcat%5CContainer%E6%9E%B6%E6%9E%84.svg">
+<meta property="article:published_time" content="2022-08-15T00:14:16.000Z">
+<meta property="article:modified_time" content="2023-02-23T09:42:44.136Z">
+<meta property="article:author" content="热心的蚂蚁">
+<meta property="article:tag" content="架构">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://chenguanghua.github.io/.%5Ctomcat%5Ctomcat.svg">
+
+
+<link rel="canonical" href="https://chenguanghua.github.io/2022/08/15/tomcat/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://chenguanghua.github.io/2022/08/15/tomcat/","path":"2022/08/15/tomcat/","title":"tomcat架构"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>tomcat架构 | 热心的蚂蚁的博客</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">热心的蚂蚁的博客</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/%E9%A6%96%E9%A1%B5" rel="section">首页</a></li>
+  </ul>
+</nav>
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-tomcat-%E6%9E%B6%E6%9E%84-%E6%95%B4%E4%BD%93%E6%9E%B6%E6%9E%84"><span class="nav-number">1.</span> <span class="nav-text">1.tomcat 架构 整体架构</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-Connector%E6%9E%B6%E6%9E%84"><span class="nav-number">2.</span> <span class="nav-text">2.Connector架构</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-Container%E6%9E%B6%E6%9E%84"><span class="nav-number">3.</span> <span class="nav-text">3. Container架构</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-container-%E5%A6%82%E4%BD%95%E5%A4%84%E7%90%86%E8%AF%B7%E6%B1%82"><span class="nav-number">4.</span> <span class="nav-text">4.container 如何处理请求</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">热心的蚂蚁</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">44</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">13</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">7</span>
+        <span class="site-state-item-name">标签</span>
+      </div>
+  </nav>
+</div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://chenguanghua.github.io/2022/08/15/tomcat/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="热心的蚂蚁">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="热心的蚂蚁的博客">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="tomcat架构 | 热心的蚂蚁的博客">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          tomcat架构
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2022-08-15 08:14:16" itemprop="dateCreated datePublished" datetime="2022-08-15T08:14:16+08:00">2022-08-15</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2023-02-23 17:42:44" itemprop="dateModified" datetime="2023-02-23T17:42:44+08:00">2023-02-23</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/java/" itemprop="url" rel="index"><span itemprop="name">java</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <h2 id="1-tomcat-架构-整体架构"><a href="#1-tomcat-架构-整体架构" class="headerlink" title="1.tomcat 架构 整体架构"></a>1.tomcat 架构 整体架构</h2><p>（1）Tomcat中只有一个Server，一个Server可以有多个Service，一个Service可以有多个Connector和一个Container；<br>（2） Server掌管着整个Tomcat的生死大权；<br>（4）Service 是对外提供服务的；<br>（5）Connector用于接受请求并将请求封装成Request和Response来具体处理；<br>（6）Container用于封装和管理Servlet，以及具体处理request请求；</p>
+<h2 id="2-Connector架构"><a href="#2-Connector架构" class="headerlink" title="2.Connector架构"></a>2.Connector架构</h2><p><img src="/.%5Ctomcat%5Ctomcat.svg" alt="tomcat"></p>
+<blockquote>
+<p>Connector就是使用ProtocolHandler来处理请求的，不同的ProtocolHandler代表不同的连接类型，比如：Http11Protocol使用的是普通Socket来连接的，Http11NioProtocol使用的是NioSocket来连接的</p>
+</blockquote>
+<p>ProtocolHandler 包含三部分：EndPoint，Processor, Adapter</p>
+<ul>
+<li>EndPoint用于处理底层的socket的网络连接，封装成Request，Adapter用于将Requet 交给Container</li>
+<li>EndPoint 处理底层socket连接，因此实现TCP&#x2F;IP协议，Processor 实现了 Http协议</li>
+<li>Endpoint的抽象实现AbstractEndpoint里面定义的Acceptor和AsyncTimeout两个内部类和一个Handler接口。Acceptor用于监听请求，AsyncTimeout用于检查异步Request的超时，Handler用于处理接收到的Socket，在内部调用Processor进行处理</li>
+</ul>
+<h2 id="3-Container架构"><a href="#3-Container架构" class="headerlink" title="3. Container架构"></a>3. Container架构</h2><p><img src="/.%5Ctomcat%5CContainer%E6%9E%B6%E6%9E%84.svg" alt="Container架构"></p>
+<p>Engine：引擎，用来管理多个站点，一个Service最多只能有一个Engine</p>
+<p>host: 每个host代表一个虚拟主机</p>
+<p>context: 每个context 代表一个应用</p>
+<p>wrapper: 每个wrapper 代表一个servlet</p>
+<h2 id="4-container-如何处理请求"><a href="#4-container-如何处理请求" class="headerlink" title="4.container 如何处理请求"></a>4.container 如何处理请求</h2><blockquote>
+<p>Container处理请求是使用Pipeline-Value管道来处理的</p>
+</blockquote>
+<p>Container包含四个子容器，而这四个子容器对应的BaseValue分别在：StandardEngineValue、StandardHostValue、StandardContextValue、StandardWrapperValue</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E6%9E%B6%E6%9E%84/" rel="tag"># 架构</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2022/08/15/%E5%B9%82%E7%AD%89/" rel="prev" title="幂等">
+                  <i class="fa fa-chevron-left"></i> 幂等
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2022/08/15/%E5%88%86%E5%B8%83%E5%BC%8F%E4%BA%8B%E5%8A%A1/" rel="next" title="分布式事务">
+                  分布式事务 <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">热心的蚂蚁</span>
+</div>
+<!--
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/pisces/" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+
+-->
+    </div>
+  </footer>
+
+  
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="/lib/animejs/lib/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+
+
+
+  
+
+
+
+
+
+</body>
+</html>
