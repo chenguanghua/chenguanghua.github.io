@@ -17,7 +17,7 @@
 <link rel="stylesheet" href="/lib/@fortawesome/fontawesome-free/css/all.min.css" integrity="sha256-Z1K5uhUaJXA7Ll0XrZ/0JhX4lAtZFpT6jkKrEDT0drU=" crossorigin="anonymous">
   <link rel="stylesheet" href="/lib/animate.css/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
 
-<script class="next-config" data-name="main" type="application/json">{"hostname":"chenguanghua.github.io","root":"/","images":"/images","scheme":"Pisces","darkmode":false,"version":"8.14.2","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":{"enable":true,"style":"mac"},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
+<script class="next-config" data-name="main" type="application/json">{"hostname":"chenguanghua.github.io","root":"/","images":"/images","scheme":"Gemini","darkmode":false,"version":"8.14.2","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":{"enable":true,"style":"mac"},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
 
     <meta property="og:type" content="website">
 <meta property="og:title" content="热心的蚂蚁的博客">
@@ -44,7 +44,7 @@
 
 
 
-
+<link rel="stylesheet" type="text/css" href="/css/injector/main.css" /><link rel="preload" as="style" href="/css/injector/light.css" /><link rel="preload" as="style" href="/css/injector/dark.css" />
   <noscript>
     <link rel="stylesheet" href="/css/noscript.css">
   </noscript>
@@ -75,6 +75,7 @@
 
   <div class="site-nav-right">
     <div class="toggle popup-trigger" aria-label="搜索" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
     </div>
   </div>
 </div>
@@ -82,12 +83,38 @@
 
 
 <nav class="site-nav">
-  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/%E9%A6%96%E9%A1%B5" rel="section">首页</a></li>
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section">首页</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
   </ul>
 </nav>
 
 
 
+  <div class="search-pop-overlay">
+    <div class="popup search-popup"><div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close" role="button">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
 
 </header>
         
@@ -119,13 +146,13 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">44</span>
+          <span class="site-state-item-count">37</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
           <a href="/categories/">
-        <span class="site-state-item-count">13</span>
+        <span class="site-state-item-count">9</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
@@ -155,7 +182,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://chenguanghua.github.io/2023/02/22/%E4%BB%A3%E7%A0%81/%E4%BB%A3%E7%A0%81/">
+    <link itemprop="mainEntityOfPage" href="https://chenguanghua.github.io/2022/08/15/es/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -173,7 +200,7 @@
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/2023/02/22/%E4%BB%A3%E7%A0%81/%E4%BB%A3%E7%A0%81/" class="post-title-link" itemprop="url">未命名</a>
+          <a href="/2022/08/15/es/" class="post-title-link" itemprop="url">es</a>
         </h2>
 
         <div class="post-meta-container">
@@ -184,14 +211,23 @@
       </span>
       <span class="post-meta-item-text">发表于</span>
 
-      <time title="创建时间：2023-02-22 17:16:49" itemprop="dateCreated datePublished" datetime="2023-02-22T17:16:49+08:00">2023-02-22</time>
+      <time title="创建时间：2022-08-15 08:14:16" itemprop="dateCreated datePublished" datetime="2022-08-15T08:14:16+08:00">2022-08-15</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2023-02-23 14:02:36" itemprop="dateModified" datetime="2023-02-23T14:02:36+08:00">2023-02-23</time>
+      <time title="修改时间：2023-02-24 12:48:34" itemprop="dateModified" datetime="2023-02-24T12:48:34+08:00">2023-02-24</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/java/" itemprop="url" rel="index"><span itemprop="name">java</span></a>
+        </span>
     </span>
 
   
@@ -204,17 +240,15 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <h2 id="1-线程池统一异常打印"><a href="#1-线程池统一异常打印" class="headerlink" title="1.线程池统一异常打印"></a>1.线程池统一异常打印</h2><p>但是当线程池调用方法很多时，那么每个线程执行方法内都要 <code>try/catch</code> 处理，这就不优雅了，其实<code>ThreadPoolExecutor</code>类还支持传入 <code>ThreadFactory</code> 参数，自定义线程工厂，在创建 <code>thread</code> 时，指定 <code>setUncaughtExceptionHandler</code> 异常处理方法，这样就可以做到全局处理异常了</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">ThreadFactory threadFactory = r -&gt; &#123;</span><br><span class="line">    Thread thread = new Thread(r);</span><br><span class="line">    thread.setUncaughtExceptionHandler((t, e) -&gt; &#123;</span><br><span class="line">        // 记录线程异常</span><br><span class="line">        log.error(e.getMessage(), e);</span><br><span class="line">    &#125;);</span><br><span class="line">    return thread;</span><br><span class="line">&#125;;</span><br><span class="line">ThreadPoolExecutor threadPoolExecutor = new ThreadPoolExecutor(5, 10, 60,</span><br><span class="line">        TimeUnit.SECONDS, new ArrayBlockingQueue&lt;&gt;(100000),</span><br><span class="line">        threadFactory);</span><br><span class="line">threadPoolExecutor.execute(() -&gt; &#123;</span><br><span class="line">    log.info(&quot;---------------------&quot;);</span><br><span class="line">    int i = 1 / 0;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
-
-<h2 id="2-优雅得Springboot-mybatis配置多数据源方式"><a href="#2-优雅得Springboot-mybatis配置多数据源方式" class="headerlink" title="2. 优雅得Springboot + mybatis配置多数据源方式"></a>2. 优雅得<code>Springboot + mybatis</code>配置多数据源方式</h2><p><code>Springboot + mybatis</code> 得项目中一般通过 <code>@MapperScan</code> 注解配置 <code>dao</code> 层包目录，来实现 <code>dao</code> 层增强，其实项目中配置一个<code>@MapperScan</code> 是指定一个数据源，配置两个<code>@MapperScan</code>就可以指定两个数据源，通过不同得 <code>dao</code> 层包目录区分，来实现不同数据源得访问隔离。</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br></pre></td><td class="code"><pre><span class="line">/**</span><br><span class="line"> * 主数据源</span><br><span class="line"> */</span><br><span class="line">@Slf4j</span><br><span class="line">@Configuration</span><br><span class="line">@MapperScan(basePackages = &#123;&quot;com.xxx.dao.master&quot;&#125;,</span><br><span class="line">        sqlSessionFactoryRef = &quot;MasterSqlSessionFactory&quot;)</span><br><span class="line">public class MasterDataSourceConfig &#123;</span><br><span class="line"></span><br><span class="line">    @Bean(name = &quot;MasterDataSource&quot;)</span><br><span class="line">    @Qualifier(&quot;MasterDataSource&quot;)</span><br><span class="line">    @ConfigurationProperties(prefix = &quot;spring.datasource.master&quot;)</span><br><span class="line">    public DataSource clickHouseDataSource() &#123;</span><br><span class="line">        return DruidDataSourceBuilder.create().build();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Bean(name = &quot;MasterSqlSessionFactory&quot;)</span><br><span class="line">    public SqlSessionFactory getSqlSessionFactory(@Qualifier(&quot;MasterDataSource&quot;) DataSource dataSource) throws Exception &#123;</span><br><span class="line">        MybatisSqlSessionFactoryBean sessionFactoryBean = new MybatisSqlSessionFactoryBean();</span><br><span class="line">        sessionFactoryBean.setDataSource(dataSource);</span><br><span class="line">        sessionFactoryBean.setMapperLocations(new PathMatchingResourcePatternResolver()</span><br><span class="line">                .getResources(&quot;classpath*:mapper/master/*.xml&quot;));</span><br><span class="line">        log.info(&quot;------------------------------------------MasterDataSource 配置成功&quot;);</span><br><span class="line">        return sessionFactoryBean.getObject();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">/**</span><br><span class="line"> * 从数据源</span><br><span class="line"> */</span><br><span class="line">@Slf4j</span><br><span class="line">@Configuration</span><br><span class="line">@MapperScan(basePackages = &#123;&quot;com.xxx.dao.slave&quot;&#125;,</span><br><span class="line">        sqlSessionFactoryRef = &quot;SlaveSqlSessionFactory&quot;)</span><br><span class="line">public class SlaveDataSourceConfig &#123;</span><br><span class="line"></span><br><span class="line">    @Bean(name = &quot;SlaveDataSource&quot;)</span><br><span class="line">    @Qualifier(&quot;SlaveDataSource&quot;)</span><br><span class="line">    @ConfigurationProperties(prefix = &quot;spring.datasource.slave&quot;)</span><br><span class="line">    public DataSource clickHouseDataSource() &#123;</span><br><span class="line">        return DruidDataSourceBuilder.create().build();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Bean(name = &quot;SlaveSqlSessionFactory&quot;)</span><br><span class="line">    public SqlSessionFactory getSqlSessionFactory(@Qualifier(&quot;SlaveDataSource&quot;) DataSource dataSource) throws Exception &#123;</span><br><span class="line">        MybatisSqlSessionFactoryBean sessionFactoryBean = new MybatisSqlSessionFactoryBean();</span><br><span class="line">        sessionFactoryBean.setDataSource(dataSource);</span><br><span class="line">        sessionFactoryBean.setMapperLocations(new PathMatchingResourcePatternResolver()</span><br><span class="line">                .getResources(&quot;classpath*:mapper/slave/*.xml&quot;));</span><br><span class="line">        log.info(&quot;------------------------------------------SlaveDataSource 配置成功&quot;);</span><br><span class="line">        return sessionFactoryBean.getObject();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">复制代码</span><br><span class="line">数据源yml配置</span><br><span class="line">spring:</span><br><span class="line">  datasource:</span><br><span class="line">    type: com.alibaba.druid.pool.DruidDataSource</span><br><span class="line">    driverClassName: com.mysql.cj.jdbc.Driver</span><br><span class="line">    # 主库数据源</span><br><span class="line">    master:</span><br><span class="line">      url: jdbc:mysql://localhost:3306/db1?useUnicode=true&amp;characterEncoding=utf8&amp;zeroDateTimeBehavior=convertToNull&amp;useSSL=true&amp;serverTimezone=GMT%2B8</span><br><span class="line">      username: root</span><br><span class="line">      password:</span><br><span class="line">    slave:</span><br><span class="line">      url: jdbc:mysql://localhost:3306/db2?useUnicode=true&amp;characterEncoding=utf8&amp;zeroDateTimeBehavior=convertToNull&amp;useSSL=true&amp;serverTimezone=GMT%2B8</span><br><span class="line">      username: root</span><br><span class="line">      password:</span><br></pre></td></tr></table></figure>
-
-<h2 id="3-MDC-在父子线程使用"><a href="#3-MDC-在父子线程使用" class="headerlink" title="3. MDC 在父子线程使用"></a>3. <code>MDC</code> 在父子线程使用</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br></pre></td><td class="code"><pre><span class="line">/**</span><br><span class="line"> * 自定义Spring线程池，解决子线程丢失reqest_id问题</span><br><span class="line"> */</span><br><span class="line">public class ThreadPoolExecutorMdcWrapper extends ThreadPoolTaskExecutor &#123;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public void execute(Runnable task) &#123;</span><br><span class="line">        super.execute(ThreadMdcUtil.wrap(task, MDC.getCopyOfContextMap()));</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public &lt;T&gt; Future&lt;T&gt; submit(Callable&lt;T&gt; task) &#123;</span><br><span class="line">        return super.submit(ThreadMdcUtil.wrap(task, MDC.getCopyOfContextMap()));</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public Future&lt;?&gt; submit(Runnable task) &#123;</span><br><span class="line">        return super.submit(ThreadMdcUtil.wrap(task, MDC.getCopyOfContextMap()));</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">/**</span><br><span class="line"> * MDC帮助类，添加reqest_id</span><br><span class="line"> */</span><br><span class="line">public class ThreadMdcUtil &#123;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    public static final String REQUEST_ID = &quot;request_id&quot;;</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * 设置请求唯一ID</span><br><span class="line">     */</span><br><span class="line">    public static void setTraceIdIfAbsent() &#123;</span><br><span class="line">        if (MDC.get(REQUEST_ID) == null) &#123;</span><br><span class="line">            MDC.put(REQUEST_ID, IdUtil.getUid());</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * 存在userId则添加到REQUEST_ID中</span><br><span class="line">     * @param userId</span><br><span class="line">     */</span><br><span class="line">    public static void setUserId(String userId) &#123;</span><br><span class="line">        String s = MDC.get(REQUEST_ID);</span><br><span class="line">        if (s != null) &#123;</span><br><span class="line">            MDC.put(REQUEST_ID, s + &quot;_&quot; + userId);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public static void removeTraceId() &#123;</span><br><span class="line">        MDC.remove(REQUEST_ID);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public static &lt;T&gt; Callable&lt;T&gt; wrap(final Callable&lt;T&gt; callable, final Map&lt;String, String&gt; context) &#123;</span><br><span class="line">        return () -&gt; &#123;</span><br><span class="line">            if (context == null) &#123;</span><br><span class="line">                MDC.clear();</span><br><span class="line">            &#125; else &#123;</span><br><span class="line">                MDC.setContextMap(context);</span><br><span class="line">            &#125;</span><br><span class="line">            setTraceIdIfAbsent();</span><br><span class="line">            try &#123;</span><br><span class="line">                return callable.call();</span><br><span class="line">            &#125; finally &#123;</span><br><span class="line">                MDC.clear();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public static Runnable wrap(final Runnable runnable, final Map&lt;String, String&gt; context) &#123;</span><br><span class="line">        return () -&gt; &#123;</span><br><span class="line">            if (context == null) &#123;</span><br><span class="line">                MDC.clear();</span><br><span class="line">            &#125; else &#123;</span><br><span class="line">                MDC.setContextMap(context);</span><br><span class="line">            &#125;</span><br><span class="line">            // 设置traceId</span><br><span class="line">            setTraceIdIfAbsent();</span><br><span class="line">            try &#123;</span><br><span class="line">                runnable.run();</span><br><span class="line">            &#125; finally &#123;</span><br><span class="line">                MDC.clear();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;。</span><br></pre></td></tr></table></figure>
-
-<p>在 最后在 <code>logback.xml</code> 中添加 <code>%X&#123;request_id&#125;</code></p>
-<h2 id="4-下载设置"><a href="#4-下载设置" class="headerlink" title="4.下载设置"></a>4.下载设置</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">response.setContentType(&quot;application/vnd.ms-excel&quot;);</span><br><span class="line">response.setCharacterEncoding(&quot;utf-8&quot;);</span><br><span class="line">// 这里URLEncoder.encode可以防止中文乱码 当然和easyexcel没有关系</span><br><span class="line">String fileName = URLEncoder.encode(&quot;认证流水&quot;, &quot;UTF-8&quot;);</span><br><span class="line">response.setHeader(&quot;Content-disposition&quot;, &quot;attachment;filename=&quot; + fileName + &quot;.xlsx&quot;);</span><br><span class="line">EasyExcel.write(response.getOutputStream(), ChinaPayRecordDto.class).sheet(&quot;认证流水&quot;).doWrite(list);</span><br></pre></td></tr></table></figure>
-
+          <p>es 总结</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2022/08/15/es/">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
       
     </div>
 
@@ -240,7 +274,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://chenguanghua.github.io/2023/02/22/%E4%BB%A3%E7%A0%81/Untitled%201/">
+    <link itemprop="mainEntityOfPage" href="https://chenguanghua.github.io/2022/08/15/mysql/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -258,7 +292,7 @@
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/2023/02/22/%E4%BB%A3%E7%A0%81/Untitled%201/" class="post-title-link" itemprop="url">未命名</a>
+          <a href="/2022/08/15/mysql/" class="post-title-link" itemprop="url">mysql相关</a>
         </h2>
 
         <div class="post-meta-container">
@@ -269,14 +303,23 @@
       </span>
       <span class="post-meta-item-text">发表于</span>
 
-      <time title="创建时间：2023-02-22 17:16:49" itemprop="dateCreated datePublished" datetime="2023-02-22T17:16:49+08:00">2023-02-22</time>
+      <time title="创建时间：2022-08-15 08:14:16" itemprop="dateCreated datePublished" datetime="2022-08-15T08:14:16+08:00">2022-08-15</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2023-02-17 17:37:08" itemprop="dateModified" datetime="2023-02-17T17:37:08+08:00">2023-02-17</time>
+      <time title="修改时间：2023-02-24 12:52:29" itemprop="dateModified" datetime="2023-02-24T12:52:29+08:00">2023-02-24</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/" itemprop="url" rel="index"><span itemprop="name">数据库</span></a>
+        </span>
     </span>
 
   
@@ -289,7 +332,15 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          
+          <p>mysql相关</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2022/08/15/mysql/">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
       
     </div>
 
@@ -315,7 +366,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://chenguanghua.github.io/2023/02/22/%E4%BB%A3%E7%A0%81/spring%E4%B8%ADMongo%E5%92%8Cmybatis%E6%95%B0%E6%8D%AE%E4%BA%8B%E5%8A%A1/">
+    <link itemprop="mainEntityOfPage" href="https://chenguanghua.github.io/2022/08/15/spring/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -333,7 +384,7 @@
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/2023/02/22/%E4%BB%A3%E7%A0%81/spring%E4%B8%ADMongo%E5%92%8Cmybatis%E6%95%B0%E6%8D%AE%E4%BA%8B%E5%8A%A1/" class="post-title-link" itemprop="url">未命名</a>
+          <a href="/2022/08/15/spring/" class="post-title-link" itemprop="url">spring为题总结</a>
         </h2>
 
         <div class="post-meta-container">
@@ -344,14 +395,23 @@
       </span>
       <span class="post-meta-item-text">发表于</span>
 
-      <time title="创建时间：2023-02-22 17:16:49" itemprop="dateCreated datePublished" datetime="2023-02-22T17:16:49+08:00">2023-02-22</time>
+      <time title="创建时间：2022-08-15 08:14:16" itemprop="dateCreated datePublished" datetime="2022-08-15T08:14:16+08:00">2022-08-15</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2023-02-10 17:24:58" itemprop="dateModified" datetime="2023-02-10T17:24:58+08:00">2023-02-10</time>
+      <time title="修改时间：2023-02-24 12:59:43" itemprop="dateModified" datetime="2023-02-24T12:59:43+08:00">2023-02-24</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/java/" itemprop="url" rel="index"><span itemprop="name">java</span></a>
+        </span>
     </span>
 
   
@@ -364,13 +424,15 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <h2 id="配置事务"><a href="#配置事务" class="headerlink" title="配置事务"></a>配置事务</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="meta">@Configuration</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">TranscationConfig</span> &#123;</span><br><span class="line">    <span class="meta">@Bean(name = &quot;mongoTransactionManager&quot;)</span></span><br><span class="line">    MongoTransactionManager <span class="title function_">transactionManager</span><span class="params">(MongoDbFactory factory)</span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">MongoTransactionManager</span>(factory);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"> <span class="meta">@Bean(name = &quot;javaTransactionManager&quot;)</span></span><br><span class="line">    <span class="meta">@Primary</span> <span class="comment">//事务默认使用mysql数据库</span></span><br><span class="line">    <span class="keyword">public</span> DataSourceTransactionManager <span class="title function_">testTransactionManager</span><span class="params">(<span class="meta">@Qualifier(&quot;dataSource&quot;)</span> DataSource dataSource)</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">DataSourceTransactionManager</span>(dataSource);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">同时支持</span><br><span class="line">@Configuration</span><br><span class="line">public class TransactionConfig &#123;</span><br><span class="line">    @Bean</span><br><span class="line">    MongoTransactionManager mongoTransactionManager(MongoDbFactory mongoDbFactory) &#123;</span><br><span class="line">        return new MongoTransactionManager(mongoDbFactory);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Bean</span><br><span class="line">    DataSourceTransactionManager transactionManager(DataSource dataSource) &#123;</span><br><span class="line">        return new DataSourceTransactionManager(dataSource);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Bean</span><br><span class="line">    @Primary</span><br><span class="line">    public PlatformTransactionManager chainedTransactionManager(MongoTransactionManager mongoTransactionManager,</span><br><span class="line">                                                                DataSourceTransactionManager dataSourceTransactionManager) &#123;</span><br><span class="line">        return new ChainedTransactionManager(mongoTransactionManager, dataSourceTransactionManager);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-
-
+          <p>spring为题总结</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2022/08/15/spring/">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
       
     </div>
 
@@ -396,7 +458,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://chenguanghua.github.io/2023/02/22/%E4%BB%A3%E7%A0%81/spring-cloud%E6%89%A9%E5%B1%95%E7%82%B9/">
+    <link itemprop="mainEntityOfPage" href="https://chenguanghua.github.io/2022/08/15/rocket%E4%BA%8B%E5%8A%A1%E6%B6%88%E6%81%AF/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -414,7 +476,7 @@
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/2023/02/22/%E4%BB%A3%E7%A0%81/spring-cloud%E6%89%A9%E5%B1%95%E7%82%B9/" class="post-title-link" itemprop="url">未命名</a>
+          <a href="/2022/08/15/rocket%E4%BA%8B%E5%8A%A1%E6%B6%88%E6%81%AF/" class="post-title-link" itemprop="url">rocketMq事务消息实现</a>
         </h2>
 
         <div class="post-meta-container">
@@ -425,14 +487,27 @@
       </span>
       <span class="post-meta-item-text">发表于</span>
 
-      <time title="创建时间：2023-02-22 17:16:49" itemprop="dateCreated datePublished" datetime="2023-02-22T17:16:49+08:00">2023-02-22</time>
+      <time title="创建时间：2022-08-15 08:14:16" itemprop="dateCreated datePublished" datetime="2022-08-15T08:14:16+08:00">2022-08-15</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2023-02-14 11:07:28" itemprop="dateModified" datetime="2023-02-14T11:07:28+08:00">2023-02-14</time>
+      <time title="修改时间：2023-02-24 12:50:29" itemprop="dateModified" datetime="2023-02-24T12:50:29+08:00">2023-02-24</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/java/" itemprop="url" rel="index"><span itemprop="name">java</span></a>
+        </span>
+          ，
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/java/%E4%B8%AD%E9%97%B4%E4%BB%B6/" itemprop="url" rel="index"><span itemprop="name">中间件</span></a>
+        </span>
     </span>
 
   
@@ -445,7 +520,15 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <h2 id="1-nacos-服务注册，扩展数据存储"><a href="#1-nacos-服务注册，扩展数据存储" class="headerlink" title="1. nacos 服务注册，扩展数据存储"></a>1. nacos 服务注册，扩展数据存储</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line">@Pointcut(</span><br><span class="line">    value = &quot;execution(* org.springframework.cloud.client.serviceregistry.ServiceRegistry+.register(..)) &amp;&amp; args(registration)&quot;,</span><br><span class="line">    argNames = &quot;registration&quot;</span><br><span class="line">)</span><br><span class="line">private void pointcut(Registration registration) &#123;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">@Before(</span><br><span class="line">    value = &quot;pointcut(registration)&quot;,</span><br><span class="line">    argNames = &quot;registration&quot;</span><br><span class="line">)</span><br><span class="line">private void beforeServiceRegister(Registration registration) &#123;</span><br><span class="line">    if (CollectionUtils.isNotEmpty(this.processors) &amp;&amp; registration != null) &#123;</span><br><span class="line">        this.processors.forEach((each) -&gt; &#123;</span><br><span class="line">            each.processing(@Pointcut(</span><br><span class="line">        value = &quot;execution(* org.springframework.cloud.client.serviceregistry.ServiceRegistry+.register(..)) &amp;&amp; args(registration)&quot;,</span><br><span class="line">        argNames = &quot;registration&quot;</span><br><span class="line">    )</span><br><span class="line">    private void pointcut(Registration registration) &#123;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Before(</span><br><span class="line">        value = &quot;pointcut(registration)&quot;,</span><br><span class="line">        argNames = &quot;registration&quot;</span><br><span class="line">    )</span><br><span class="line">    private void beforeServiceRegister(Registration registration) &#123;</span><br><span class="line">        Map&lt;String, String&gt; metaData= getMetadata();</span><br><span class="line">        mataData.put(&quot;1&quot;,&quot;2&quot;);</span><br><span class="line"></span><br><span class="line">    &#125;);</span><br><span class="line">        &#125;);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+          <p>RocketMQ 事务消息</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2022/08/15/rocket%E4%BA%8B%E5%8A%A1%E6%B6%88%E6%81%AF/">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
       
     </div>
 
@@ -471,7 +554,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://chenguanghua.github.io/2023/02/22/%E4%BB%A3%E7%A0%81/spring%20%E5%8A%A0%E8%BD%BDbean%20%E6%96%B9%E5%BC%8F/">
+    <link itemprop="mainEntityOfPage" href="https://chenguanghua.github.io/2022/08/15/springCloud/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -489,7 +572,7 @@
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/2023/02/22/%E4%BB%A3%E7%A0%81/spring%20%E5%8A%A0%E8%BD%BDbean%20%E6%96%B9%E5%BC%8F/" class="post-title-link" itemprop="url">未命名</a>
+          <a href="/2022/08/15/springCloud/" class="post-title-link" itemprop="url">spring cloud 组件介绍</a>
         </h2>
 
         <div class="post-meta-container">
@@ -500,14 +583,23 @@
       </span>
       <span class="post-meta-item-text">发表于</span>
 
-      <time title="创建时间：2023-02-22 17:16:49" itemprop="dateCreated datePublished" datetime="2023-02-22T17:16:49+08:00">2023-02-22</time>
+      <time title="创建时间：2022-08-15 08:14:16" itemprop="dateCreated datePublished" datetime="2022-08-15T08:14:16+08:00">2022-08-15</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2023-02-15 17:17:42" itemprop="dateModified" datetime="2023-02-15T17:17:42+08:00">2023-02-15</time>
+      <time title="修改时间：2023-02-24 13:00:04" itemprop="dateModified" datetime="2023-02-24T13:00:04+08:00">2023-02-24</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/java/" itemprop="url" rel="index"><span itemprop="name">java</span></a>
+        </span>
     </span>
 
   
@@ -520,48 +612,15 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <h2 id="1-配置文件"><a href="#1-配置文件" class="headerlink" title="1.配置文件"></a>1.配置文件</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">ClassPathXmlApplicationContext</span> <span class="variable">applicationContext</span> <span class="operator">=</span> <span class="keyword">new</span>       <span class="title class_">ClassPathXmlApplicationContext</span>(<span class="string">&quot;classpath:bean.xml&quot;</span>);</span><br><span class="line">       applicationContext.refresh();</span><br><span class="line">       <span class="type">User</span> <span class="variable">user</span> <span class="operator">=</span> applicationContext.getBean(User.class);</span><br></pre></td></tr></table></figure>
-
-<h2 id="2-properties配置文件声明Bean的方式"><a href="#2-properties配置文件声明Bean的方式" class="headerlink" title="2.properties配置文件声明Bean的方式"></a>2.properties配置文件声明Bean的方式</h2><p> properties：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">user.(class) = com.sanyou.spring.bean.injection.User</span><br><span class="line">user.username = sanyou</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">GenericApplicationContext applicationContext = new GenericApplicationContext();</span><br><span class="line">      //创建一个PropertiesBeanDefinitionReader，可以从properties读取Bean的信息，将读到的Bean信息放到applicationContext中</span><br><span class="line">      PropertiesBeanDefinitionReader propReader = new PropertiesBeanDefinitionReader(applicationContext);</span><br><span class="line">      //创建一个properties文件对应的Resource对象</span><br><span class="line">      Resource classPathResource = new ClassPathResource(&quot;PropertiesBeanInjectionDemo.properties&quot;);</span><br><span class="line">      //加载配置文件</span><br><span class="line">      propReader.loadBeanDefinitions(classPathResource);</span><br><span class="line">      applicationContext.refresh();</span><br><span class="line">      User user = applicationContext.getBean(User.class);</span><br><span class="line">      System.out.println(user);</span><br></pre></td></tr></table></figure>
-
-<h2 id="3-Import-方式"><a href="#3-Import-方式" class="headerlink" title="3. @Import 方式"></a>3. @Import 方式</h2><ul>
-<li>导入普通bean，</li>
-</ul>
-<ul>
-<li><p>类实现了<code>ImportSelector</code>接口</p>
-</li>
-<li><p>类实现了<code>ImportBeanDefinitionRegistrar</code>接口</p>
-</li>
-</ul>
-<p>使用场景配合 <code>enableXXX</code>注解使用</p>
-<h2 id="4-注册BeanDefinition"><a href="#4-注册BeanDefinition" class="headerlink" title="4.  注册BeanDefinition"></a>4.  注册<code>BeanDefinition</code></h2><p>  以下两种都可以获取<code>beanDefinitionRegister</code></p>
-<ul>
-<li><code>ImportBeanDefinitionRegistrar</code></li>
-<li><code>BeanDefinitionRegistryPostProcessor</code></li>
-</ul>
-<h2 id="5-注册完整bean"><a href="#5-注册完整bean" class="headerlink" title="5. 注册完整bean"></a>5. 注册完整bean</h2><p>拿到 SingletonBeanRegistry 直接注册，如实现 BeanFactoryPostProcessor</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">public class RegisterUserBeanFactoryPostProcessor implements BeanFactoryPostProcessor &#123;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public void postProcessBeanFactory(ConfigurableListableBeanFactory beanFactory) throws BeansException &#123;</span><br><span class="line">        User user = new User();</span><br><span class="line">        user.setUsername(&quot;用户名&quot;);</span><br><span class="line">        //将这个User对象注入到Spring容器中</span><br><span class="line">        beanFactory.registerSingleton(&quot;user&quot;, user);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h2 id="6-注入-beanFactory"><a href="#6-注入-beanFactory" class="headerlink" title="6. 注入 beanFactory"></a>6. 注入 beanFactory</h2><h2 id="7-其他扩展点"><a href="#7-其他扩展点" class="headerlink" title="7 其他扩展点"></a>7 其他扩展点</h2><h2 id="InstantiationAwareBeanPostProcessor"><a href="#InstantiationAwareBeanPostProcessor" class="headerlink" title="InstantiationAwareBeanPostProcessor"></a><strong>InstantiationAwareBeanPostProcessor</strong></h2><p><strong><code>BeanPostProcess</code>接口只在bean的初始化阶段进行扩展（注入spring上下文前后），而<code>InstantiationAwareBeanPostProcessor</code>接口在此基础上增加了3个方法，把可扩展的范围增加了实例化阶段和属性注入阶段。</strong></p>
-<p>该类主要的扩展点有以下5个方法，主要在bean生命周期的两大阶段：<strong>实例化阶段</strong> 和<strong>初始化阶段</strong> ，下面一起进行说明，按调用顺序为：</p>
-<ul>
-<li><code>postProcessBeforeInstantiation</code>：实例化bean之前，相当于new这个bean之前</li>
-<li><code>postProcessAfterInstantiation</code>：实例化bean之后，相当于new这个bean之后</li>
-<li><code>postProcessPropertyValues</code>：bean已经实例化完成，在属性注入时阶段触发，<code>@Autowired</code>,<code>@Resource</code>等注解原理基于此方法实现</li>
-<li><code>postProcessBeforeInitialization</code>：初始化bean之前，相当于把bean注入spring上下文之前</li>
-<li><code>postProcessAfterInitialization</code>：初始化bean之后，相当于把bean注入spring上下文之后</li>
-</ul>
-<h2 id="ApplicationContextAwareProcessor"><a href="#ApplicationContextAwareProcessor" class="headerlink" title="ApplicationContextAwareProcessor"></a><strong>ApplicationContextAwareProcessor</strong></h2><p><code>EnvironmentAware</code>：用于获取<code>EnviromentAware</code>的一个扩展类，这个变量非常有用， 可以获得系统内的所有参数。当然个人认为这个Aware没必要去扩展，因为spring内部都可以通过注入的方式来直接获得。</p>
-<p><code>EmbeddedValueResolverAware</code>：用于获取<code>StringValueResolver</code>的一个扩展类， <code>StringValueResolver</code>用于获取基于<code>String</code>类型的properties的变量，一般我们都用<code>@Value</code>的方式去获取，如果实现了这个Aware接口，把<code>StringValueResolver</code>缓存起来，通过这个类去获取<code>String</code>类型的变量，效果是一样的。</p>
-<p><code>ResourceLoaderAware</code>：用于获取<code>ResourceLoader</code>的一个扩展类，<code>ResourceLoader</code>可以用于获取classpath内所有的资源对象，可以扩展此类来拿到<code>ResourceLoader</code>对象。</p>
-<p><code>ApplicationEventPublisherAware</code>：用于获取<code>ApplicationEventPublisher</code>的一个扩展类，<code>ApplicationEventPublisher</code>可以用来发布事件，结合<code>ApplicationListener</code>来共同使用，下文在介绍<code>ApplicationListener</code>时会详细提到。这个对象也可以通过spring注入的方式来获得。</p>
-<p><code>MessageSourceAware</code>：用于获取<code>MessageSource</code>的一个扩展类，<code>MessageSource</code>主要用来做国际化。</p>
-<p><code>ApplicationContextAware</code>：用来获取<code>ApplicationContext</code>的一个扩展类，<code>ApplicationContext</code>应该是很多人非常熟悉的一个类了，就是spring上下文管理器，可以手动的获取任何在spring上下文注册的bean，我们经常扩展这个接口来缓存spring上下文，包装成静态方法。同时<code>ApplicationContext</code>也实现了<code>BeanFactory</code>，<code>MessageSource</code>，<code>ApplicationEventPublisher</code>等接口，也可以用来做相关接口的事情。</p>
-<h2 id="CommandLineRunner"><a href="#CommandLineRunner" class="headerlink" title="CommandLineRunner"></a><strong>CommandLineRunner</strong></h2><p>触发时机为整个项目启动完毕后，自动执行</p>
-
+          <p>spring cloud 组件介绍</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2022/08/15/springCloud/">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
       
     </div>
 
@@ -587,7 +646,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://chenguanghua.github.io/2023/02/22/%E6%9C%89%E7%94%A8%E5%8D%95%E8%AF%8D/">
+    <link itemprop="mainEntityOfPage" href="https://chenguanghua.github.io/2022/08/15/springboot/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -605,7 +664,7 @@
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/2023/02/22/%E6%9C%89%E7%94%A8%E5%8D%95%E8%AF%8D/" class="post-title-link" itemprop="url">未命名</a>
+          <a href="/2022/08/15/springboot/" class="post-title-link" itemprop="url">spring boot 自动装配自动原理</a>
         </h2>
 
         <div class="post-meta-container">
@@ -616,14 +675,23 @@
       </span>
       <span class="post-meta-item-text">发表于</span>
 
-      <time title="创建时间：2023-02-22 17:16:49" itemprop="dateCreated datePublished" datetime="2023-02-22T17:16:49+08:00">2023-02-22</time>
+      <time title="创建时间：2022-08-15 08:14:16" itemprop="dateCreated datePublished" datetime="2022-08-15T08:14:16+08:00">2022-08-15</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2023-02-21 17:49:31" itemprop="dateModified" datetime="2023-02-21T17:49:31+08:00">2023-02-21</time>
+      <time title="修改时间：2023-02-24 12:59:58" itemprop="dateModified" datetime="2023-02-24T12:59:58+08:00">2023-02-24</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/java/" itemprop="url" rel="index"><span itemprop="name">java</span></a>
+        </span>
     </span>
 
   
@@ -636,7 +704,15 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <figure class="highlight plaintext"><figcaption><span>分配</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">distribution： 分配</span><br></pre></td></tr></table></figure>
+          <p>spring boot 自动装配自动原理</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2022/08/15/springboot/">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
       
     </div>
 
@@ -662,7 +738,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://chenguanghua.github.io/2023/02/22/%E9%99%90%E6%B5%81/">
+    <link itemprop="mainEntityOfPage" href="https://chenguanghua.github.io/2022/08/15/spring%E4%BA%8B%E5%8A%A1/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -680,7 +756,7 @@
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/2023/02/22/%E9%99%90%E6%B5%81/" class="post-title-link" itemprop="url">未命名</a>
+          <a href="/2022/08/15/spring%E4%BA%8B%E5%8A%A1/" class="post-title-link" itemprop="url">spring事务机制</a>
         </h2>
 
         <div class="post-meta-container">
@@ -691,14 +767,23 @@
       </span>
       <span class="post-meta-item-text">发表于</span>
 
-      <time title="创建时间：2023-02-22 17:16:49" itemprop="dateCreated datePublished" datetime="2023-02-22T17:16:49+08:00">2023-02-22</time>
+      <time title="创建时间：2022-08-15 08:14:16" itemprop="dateCreated datePublished" datetime="2022-08-15T08:14:16+08:00">2022-08-15</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2022-12-16 14:53:15" itemprop="dateModified" datetime="2022-12-16T14:53:15+08:00">2022-12-16</time>
+      <time title="修改时间：2023-02-24 12:59:51" itemprop="dateModified" datetime="2023-02-24T12:59:51+08:00">2023-02-24</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/java/" itemprop="url" rel="index"><span itemprop="name">java</span></a>
+        </span>
     </span>
 
   
@@ -711,8 +796,15 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <h2 id="1-漏桶"><a href="#1-漏桶" class="headerlink" title="1. 漏桶"></a>1. 漏桶</h2><h2 id="2-令牌桶"><a href="#2-令牌桶" class="headerlink" title="2. 令牌桶"></a>2. 令牌桶</h2><p>​     令牌桶算法是指系统以一定地速度往令牌桶里丢令牌，当一个请求过来的时候，会去令牌桶里申请一个令牌，如果能够获取到令牌，那么请求就可以正常进行，反之被丢弃。</p>
-
+          <p>spring事务机制</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2022/08/15/spring%E4%BA%8B%E5%8A%A1/">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
       
     </div>
 
@@ -738,7 +830,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://chenguanghua.github.io/2023/02/22/%E7%BC%93%E5%AD%98%E4%B8%80%E8%87%B4%E6%80%A7/">
+    <link itemprop="mainEntityOfPage" href="https://chenguanghua.github.io/2022/08/15/tomcat/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -756,7 +848,7 @@
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/2023/02/22/%E7%BC%93%E5%AD%98%E4%B8%80%E8%87%B4%E6%80%A7/" class="post-title-link" itemprop="url">未命名</a>
+          <a href="/2022/08/15/tomcat/" class="post-title-link" itemprop="url">tomcat架构</a>
         </h2>
 
         <div class="post-meta-container">
@@ -767,14 +859,23 @@
       </span>
       <span class="post-meta-item-text">发表于</span>
 
-      <time title="创建时间：2023-02-22 17:16:49" itemprop="dateCreated datePublished" datetime="2023-02-22T17:16:49+08:00">2023-02-22</time>
+      <time title="创建时间：2022-08-15 08:14:16" itemprop="dateCreated datePublished" datetime="2022-08-15T08:14:16+08:00">2022-08-15</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2022-12-15 14:39:24" itemprop="dateModified" datetime="2022-12-15T14:39:24+08:00">2022-12-15</time>
+      <time title="修改时间：2023-02-24 12:51:07" itemprop="dateModified" datetime="2023-02-24T12:51:07+08:00">2023-02-24</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/java/" itemprop="url" rel="index"><span itemprop="name">java</span></a>
+        </span>
     </span>
 
   
@@ -787,7 +888,15 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <h2 id="1-mysql-和redis-缓存一致性问题"><a href="#1-mysql-和redis-缓存一致性问题" class="headerlink" title="1.mysql 和redis 缓存一致性问题"></a>1.mysql 和redis 缓存一致性问题</h2><h3 id="1-1-先写数据库后删除缓存"><a href="#1-1-先写数据库后删除缓存" class="headerlink" title="1.1 先写数据库后删除缓存"></a>1.1 先写数据库后删除缓存</h3>
+          <p>tomcat架构</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2022/08/15/tomcat/">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
       
     </div>
 
@@ -813,7 +922,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://chenguanghua.github.io/2023/02/22/%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1%E7%AE%97%E6%B3%95/">
+    <link itemprop="mainEntityOfPage" href="https://chenguanghua.github.io/2022/08/15/%E5%88%86%E5%B8%83%E5%BC%8F%E4%BA%8B%E5%8A%A1/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -831,7 +940,7 @@
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/2023/02/22/%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1%E7%AE%97%E6%B3%95/" class="post-title-link" itemprop="url">未命名</a>
+          <a href="/2022/08/15/%E5%88%86%E5%B8%83%E5%BC%8F%E4%BA%8B%E5%8A%A1/" class="post-title-link" itemprop="url">分布式事务</a>
         </h2>
 
         <div class="post-meta-container">
@@ -842,14 +951,23 @@
       </span>
       <span class="post-meta-item-text">发表于</span>
 
-      <time title="创建时间：2023-02-22 17:16:49" itemprop="dateCreated datePublished" datetime="2023-02-22T17:16:49+08:00">2023-02-22</time>
+      <time title="创建时间：2022-08-15 08:14:16" itemprop="dateCreated datePublished" datetime="2022-08-15T08:14:16+08:00">2022-08-15</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2022-12-22 13:57:27" itemprop="dateModified" datetime="2022-12-22T13:57:27+08:00">2022-12-22</time>
+      <time title="修改时间：2023-02-24 12:28:55" itemprop="dateModified" datetime="2023-02-24T12:28:55+08:00">2023-02-24</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E5%88%86%E5%B8%83%E5%BC%8F/" itemprop="url" rel="index"><span itemprop="name">分布式</span></a>
+        </span>
     </span>
 
   
@@ -862,7 +980,15 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          
+          <p>常见分布式协议</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2022/08/15/%E5%88%86%E5%B8%83%E5%BC%8F%E4%BA%8B%E5%8A%A1/">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
       
     </div>
 
@@ -888,7 +1014,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://chenguanghua.github.io/2023/02/22/hello-world/">
+    <link itemprop="mainEntityOfPage" href="https://chenguanghua.github.io/2022/08/15/%E5%8D%95%E4%BE%8B/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -906,7 +1032,7 @@
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/2023/02/22/hello-world/" class="post-title-link" itemprop="url">Hello World</a>
+          <a href="/2022/08/15/%E5%8D%95%E4%BE%8B/" class="post-title-link" itemprop="url">单例模式</a>
         </h2>
 
         <div class="post-meta-container">
@@ -917,7 +1043,23 @@
       </span>
       <span class="post-meta-item-text">发表于</span>
 
-      <time title="创建时间：2023-02-22 15:58:06" itemprop="dateCreated datePublished" datetime="2023-02-22T15:58:06+08:00">2023-02-22</time>
+      <time title="创建时间：2022-08-15 08:14:16" itemprop="dateCreated datePublished" datetime="2022-08-15T08:14:16+08:00">2022-08-15</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2023-02-24 12:38:12" itemprop="dateModified" datetime="2023-02-24T12:38:12+08:00">2023-02-24</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/java/" itemprop="url" rel="index"><span itemprop="name">java</span></a>
+        </span>
     </span>
 
   
@@ -930,20 +1072,15 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <p>Welcome to <a target="_blank" rel="noopener" href="https://hexo.io/">Hexo</a>! This is your very first post. Check <a target="_blank" rel="noopener" href="https://hexo.io/docs/">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a target="_blank" rel="noopener" href="https://hexo.io/docs/troubleshooting.html">troubleshooting</a> or you can ask me on <a target="_blank" rel="noopener" href="https://github.com/hexojs/hexo/issues">GitHub</a>.</p>
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new <span class="string">&quot;My New Post&quot;</span></span><br></pre></td></tr></table></figure>
-
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/writing.html">Writing</a></p>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/server.html">Server</a></p>
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/generating.html">Generating</a></p>
-<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/one-command-deployment.html">Deployment</a></p>
-
+          <p>创建单例模式几种方式及优缺点</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2022/08/15/%E5%8D%95%E4%BE%8B/">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
       
     </div>
 
@@ -962,7 +1099,7 @@
 
 
   <nav class="pagination">
-    <a class="extend prev" rel="prev" title="上一页" aria-label="上一页" href="/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/5/">5</a><a class="extend next" rel="next" title="下一页" aria-label="下一页" href="/page/3/"><i class="fa fa-angle-right"></i></a>
+    <a class="extend prev" rel="prev" title="上一页" aria-label="上一页" href="/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><a class="page-number" href="/page/4/">4</a><a class="extend next" rel="next" title="下一页" aria-label="下一页" href="/page/3/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 </div>
@@ -981,7 +1118,7 @@
   <span class="author" itemprop="copyrightHolder">热心的蚂蚁</span>
 </div>
 <!--
-  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/pisces/" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
   </div>
 
 -->
@@ -994,6 +1131,8 @@
     <span>0%</span>
   </div>
 
+  <a href="https://github.com/chenguanghua" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
 <noscript>
   <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
 </noscript>
@@ -1003,16 +1142,38 @@
   <script src="/lib/animejs/lib/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
 <script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script>
 
+  <script src="/lib/hexo-generator-searchdb/dist/search.js" integrity="sha256-1kfA5uHPf65M5cphT2dvymhkuyHPQp5A53EGZOnOLmc=" crossorigin="anonymous"></script>
+<script src="/js/third-party/search/local-search.js"></script>
+
+
+
+
+
   
 
 
 
 
-  
-
-
-
-
-
+<div class="moon-menu">
+  <div class="moon-menu-items">
+    
+    <div id="moon-menu-item-back2bottom" class="moon-menu-item">
+      <i class='fas fa-chevron-down'></i>    </div>
+    
+    <div id="moon-menu-item-back2top" class="moon-menu-item">
+      <i class='fas fa-chevron-up'></i>    </div>
+    
+  </div>
+  <div class="moon-menu-button">
+    <svg class="moon-menu-bg">
+      <circle class="moon-menu-cricle" cx="50%" cy="50%" r="44%"></circle>
+      <circle class="moon-menu-border" cx="50%" cy="50%" r="48%"></circle>
+    </svg>
+    <div class="moon-menu-content">
+      <div class="moon-menu-icon"><i class='fas fa-ellipsis-v'></i></div>
+      <div class="moon-menu-text"></div>
+    </div>
+  </div>
+</div><script src="/js/injector.js"></script>
 </body>
 </html>
