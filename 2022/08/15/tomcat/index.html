@@ -26,14 +26,14 @@
 <meta property="og:site_name" content="热心的蚂蚁的博客">
 <meta property="og:description" content="tomcat架构">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://chenguanghua.github.io/.%5Ctomcat%5Ctomcat.svg">
-<meta property="og:image" content="https://chenguanghua.github.io/.%5Ctomcat%5CContainer%E6%9E%B6%E6%9E%84.svg">
+<meta property="og:image" content="https://chenguanghua.github.io/images/tomcat/tomcat%E6%9E%B6%E6%9E%84.svg">
+<meta property="og:image" content="https://chenguanghua.github.io/images/tomcat/Container%E6%9E%B6%E6%9E%842.svg">
 <meta property="article:published_time" content="2022-08-15T00:14:16.000Z">
-<meta property="article:modified_time" content="2023-02-24T04:51:07.045Z">
+<meta property="article:modified_time" content="2023-02-28T03:01:50.289Z">
 <meta property="article:author" content="热心的蚂蚁">
 <meta property="article:tag" content="架构">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://chenguanghua.github.io/.%5Ctomcat%5Ctomcat.svg">
+<meta name="twitter:image" content="https://chenguanghua.github.io/images/tomcat/tomcat%E6%9E%B6%E6%9E%84.svg">
 
 
 <link rel="canonical" href="https://chenguanghua.github.io/2022/08/15/tomcat/">
@@ -155,7 +155,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">38</span>
+          <span class="site-state-item-count">44</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -228,7 +228,7 @@
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2023-02-24 12:51:07" itemprop="dateModified" datetime="2023-02-24T12:51:07+08:00">2023-02-24</time>
+      <time title="修改时间：2023-02-28 11:01:50" itemprop="dateModified" datetime="2023-02-28T11:01:50+08:00">2023-02-28</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -267,7 +267,7 @@
     
     <div class="post-body" itemprop="articleBody">
         <h2 id="1-tomcat-架构-整体架构"><a href="#1-tomcat-架构-整体架构" class="headerlink" title="1.tomcat 架构 整体架构"></a>1.tomcat 架构 整体架构</h2><p>（1）Tomcat中只有一个Server，一个Server可以有多个Service，一个Service可以有多个Connector和一个Container；<br>（2） Server掌管着整个Tomcat的生死大权；<br>（4）Service 是对外提供服务的；<br>（5）Connector用于接受请求并将请求封装成Request和Response来具体处理；<br>（6）Container用于封装和管理Servlet，以及具体处理request请求；</p>
-<h2 id="2-Connector架构"><a href="#2-Connector架构" class="headerlink" title="2.Connector架构"></a>2.Connector架构</h2><p><img src="/.%5Ctomcat%5Ctomcat.svg" alt="tomcat"></p>
+<h2 id="2-Connector架构"><a href="#2-Connector架构" class="headerlink" title="2.Connector架构"></a>2.Connector架构</h2><p><img src="/../images/tomcat/tomcat%E6%9E%B6%E6%9E%84.svg" alt="tomcat"></p>
 <blockquote>
 <p>Connector就是使用ProtocolHandler来处理请求的，不同的ProtocolHandler代表不同的连接类型，比如：Http11Protocol使用的是普通Socket来连接的，Http11NioProtocol使用的是NioSocket来连接的</p>
 </blockquote>
@@ -277,7 +277,7 @@
 <li>EndPoint 处理底层socket连接，因此实现TCP&#x2F;IP协议，Processor 实现了 Http协议</li>
 <li>Endpoint的抽象实现AbstractEndpoint里面定义的Acceptor和AsyncTimeout两个内部类和一个Handler接口。Acceptor用于监听请求，AsyncTimeout用于检查异步Request的超时，Handler用于处理接收到的Socket，在内部调用Processor进行处理</li>
 </ul>
-<h2 id="3-Container架构"><a href="#3-Container架构" class="headerlink" title="3. Container架构"></a>3. Container架构</h2><p><img src="/.%5Ctomcat%5CContainer%E6%9E%B6%E6%9E%84.svg" alt="Container架构"></p>
+<h2 id="3-Container架构"><a href="#3-Container架构" class="headerlink" title="3. Container架构"></a>3. Container架构</h2><p><img src="/../images/tomcat/Container%E6%9E%B6%E6%9E%842.svg" alt="Container架构"></p>
 <p>Engine：引擎，用来管理多个站点，一个Service最多只能有一个Engine</p>
 <p>host: 每个host代表一个虚拟主机</p>
 <p>context: 每个context 代表一个应用</p>
@@ -302,13 +302,13 @@
 
           <div class="post-nav">
             <div class="post-nav-item">
-                <a href="/2022/08/15/%E5%88%86%E5%B8%83%E5%BC%8F%E4%BA%8B%E5%8A%A1/" rel="prev" title="分布式事务">
-                  <i class="fa fa-chevron-left"></i> 分布式事务
+                <a href="/2022/08/15/%E5%B9%82%E7%AD%89/" rel="prev" title="幂等">
+                  <i class="fa fa-chevron-left"></i> 幂等
                 </a>
             </div>
             <div class="post-nav-item">
-                <a href="/2022/08/15/spring%E4%BA%8B%E5%8A%A1/" rel="next" title="spring事务机制">
-                  spring事务机制 <i class="fa fa-chevron-right"></i>
+                <a href="/2022/08/15/springboot/" rel="next" title="spring boot 自动装配自动原理">
+                  spring boot 自动装配自动原理 <i class="fa fa-chevron-right"></i>
                 </a>
             </div>
           </div>
@@ -342,7 +342,7 @@
       <i class="fa fa-chart-line"></i>
     </span>
       <span>站点总字数：</span>
-    <span title="站点总字数">70k</span>
+    <span title="站点总字数">71k</span>
   </span>
   <span class="post-meta-item">
     <span class="post-meta-item-icon">
@@ -395,8 +395,8 @@
 <script>
 var options = {
   bottom: '64px',
-  right: '32px',
-  left: 'unset',
+  right: 'unset',
+  left: '32px',
   time: '0.5s',
   mixColor: 'transparent',
   backgroundColor: 'transparent',
