@@ -27,12 +27,12 @@
 <meta property="og:description" content="零拷贝几种方式介绍">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://chenguanghua.github.io/images/%E5%9B%BE%E7%89%87/typora/image-20221216102206916.png">
-<meta property="og:image" content="https://chenguanghua.github.io/images%5C%E5%9B%BE%E7%89%87%5Ctypora%5Cimage-20221216094826291.png">
-<meta property="og:image" content="https://chenguanghua.github.io/%5Cimages%5C%E5%9B%BE%E7%89%87%5Ctypora%5Cimage-20221216095340338.png">
-<meta property="og:image" content="https://chenguanghua.github.io/2023/08/15/%E9%9B%B6%E6%8B%B7%E8%B4%9D//images/%E5%9B%BE%E7%89%87/typora/image-20221216100335792.png">
-<meta property="og:image" content="https://chenguanghua.github.io/%5Cimages%5C%E5%9B%BE%E7%89%87%5Ctypora%5Cimage-20221216101217488.png">
+<meta property="og:image" content="https://chenguanghua.github.io/images/%E5%9B%BE%E7%89%87/typora/image-20221216094826291.png">
+<meta property="og:image" content="https://chenguanghua.github.io/images/%E5%9B%BE%E7%89%87/typora/image-20221216095340338.png">
+<meta property="og:image" content="https://chenguanghua.github.io/images/image-20221216100335792.png">
+<meta property="og:image" content="https://chenguanghua.github.io/images/%E5%9B%BE%E7%89%87/typora/image-20221216101217488.png">
 <meta property="article:published_time" content="2023-08-15T00:14:16.000Z">
-<meta property="article:modified_time" content="2023-02-24T09:56:08.961Z">
+<meta property="article:modified_time" content="2023-02-28T01:40:53.900Z">
 <meta property="article:author" content="热心的蚂蚁">
 <meta property="article:tag" content="IO">
 <meta name="twitter:card" content="summary">
@@ -231,7 +231,7 @@
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2023-02-24 17:56:08" itemprop="dateModified" datetime="2023-02-24T17:56:08+08:00">2023-02-24</time>
+      <time title="修改时间：2023-02-28 09:40:53" itemprop="dateModified" datetime="2023-02-28T09:40:53+08:00">2023-02-28</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -277,7 +277,7 @@
 <h2 id="2-实现方式"><a href="#2-实现方式" class="headerlink" title="2. 实现方式"></a>2. 实现方式</h2><h3 id="2-1-mmap-write"><a href="#2-1-mmap-write" class="headerlink" title="2.1.mmap + write"></a>2.1.<code>mmap + write</code></h3><blockquote>
 <p> 虚拟内存把内核空间和用户空间的虚拟地址映射到同一个物理地址, 从而减少数据拷贝次数, <code>mmap</code>技术就是利用了虚拟内存的这个特点, 它将内核中的读缓冲区与用户空间的缓冲区进行映射, 所有的IO操作都在内核中完成</p>
 </blockquote>
-<p><img src="/../images%5C%E5%9B%BE%E7%89%87%5Ctypora%5Cimage-20221216094826291.png" alt="1"></p>
+<p><img src="/../images/%E5%9B%BE%E7%89%87/typora/image-20221216094826291.png" alt="1"></p>
 <ol>
 <li><p>用户进程通过<code>mmap </code>方法向操作系统内核发起 IO 调用，上下文从用户态切换为内核态。</p>
 </li>
@@ -294,9 +294,9 @@
 </ol>
 <p><code>mmap+write</code> 实现的零拷贝，I&#x2F;O 发生了4次用户空间与内核空间的上下文切<br>换，以及3 次数据拷贝（包括了2次<code>DMA</code>拷贝和1 次CPU 拷贝）。</p>
 <h3 id="2-2-sendfile"><a href="#2-2-sendfile" class="headerlink" title="2.2 sendfile"></a>2.2 <code>sendfile</code></h3><blockquote>
-<p> <code>sendfile</code> 表示在两个文件描述符之间传输数据，它是在操作系统内核中操作的，<br>避免了数据从内核缓冲区和用户缓冲区之间的拷贝操作</p>
+<p> <code>sendfile</code> 表示在两个文件描述符之间传输数据，它是在操作系统内核中操作的，<br> 避免了数据从内核缓冲区和用户缓冲区之间的拷贝操作</p>
 </blockquote>
-<p><img src="/../%5Cimages%5C%E5%9B%BE%E7%89%87%5Ctypora%5Cimage-20221216095340338.png" alt="1"></p>
+<p><img src="/../images/%E5%9B%BE%E7%89%87/typora/image-20221216095340338.png" alt="1"></p>
 <ol>
 <li><p>用户进程发起·<code>sendfile</code> 系统调用，上下文（切换 1）从用户态转向内核态</p>
 </li>
@@ -313,8 +313,7 @@
 <h3 id="2-3-带DMA收集功能sendfile-sendfile-DMA-Scatter-Gather"><a href="#2-3-带DMA收集功能sendfile-sendfile-DMA-Scatter-Gather" class="headerlink" title="2.3 带DMA收集功能sendfile (sendfile+DMA Scatter/Gather)"></a>2.3 带<code>DMA</code>收集功能<code>sendfile</code> (<code>sendfile+DMA Scatter/Gather</code>)</h3><blockquote>
 <p><code>linux 2.4</code>版本之后，对<code>sendfile</code>做了优化升级，引入<code>SG-DMA</code>技术，其实就是对<code>DMA</code>拷贝加入了<code>scatter/gather</code>操作，它可以直接从内核空间缓冲区中将数据读取到网卡。使用这个特点搞零拷贝，即还可以多省去<strong>一次CPU拷贝</strong>。</p>
 </blockquote>
-<img src="\images\图片\typora\image-20221216100335792.png" alt="image-20221216100335792" style="zoom:80%;" />
-
+<p> <img src="/../images/image-20221216100335792.png"></p>
 <ol>
 <li>用户进程发起<code>sendfile</code>系统调用，<strong>上下文（切换1）从用户态转向内核态</strong></li>
 <li><code>DMA</code>控制器，把数据从硬盘中拷贝到内核缓冲区。</li>
@@ -326,7 +325,7 @@
 <h2 id="3-DMA-技术说明"><a href="#3-DMA-技术说明" class="headerlink" title="3. DMA 技术说明"></a>3. <code>DMA</code> 技术说明</h2><blockquote>
 <p><code>DMA</code>，英文全称是<strong>Direct Memory Access</strong>，即直接内存访问。**<code>DMA</code><strong>本质上是一块主板上独立的芯片，允许外设设备和内存存储器之间直接进行IO数据传输，其过程</strong>不需要CPU的参与**。</p>
 </blockquote>
-<p><img src="/%5Cimages%5C%E5%9B%BE%E7%89%87%5Ctypora%5Cimage-20221216101217488.png" alt="image-20221216101217488"></p>
+<p><img src="/../images/%E5%9B%BE%E7%89%87/typora/image-20221216101217488.png" alt="image-20221216101217488"></p>
 <h2 id="4-应用场景"><a href="#4-应用场景" class="headerlink" title="4.应用场景"></a>4.应用场景</h2><p><code>RocketMQ</code>和<code>Kafka</code>都使用到了零拷贝的技术。</p>
 <p>对于<code>MQ</code>而言，无非就是生产者发送数据到<code>MQ</code>然后持久化到磁盘，之后消费者从<code>MQ</code>读取数据。</p>
 <p>对于<code>RocketMQ</code>来说这两个步骤使用的是<code>mmap+write</code>，而Kafka则是使用<code>mmap+write</code>持久化数据，发送数据使用<code>sendfile</code></p>
